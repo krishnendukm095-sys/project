@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container" style="max-width: 900px; margin: 3rem auto 4rem;">
+    <!-- Hero Section -->
+    <div class="card" style="text-align: center; background: linear-gradient(135deg, #F5D5E8 0%, #E8DFD5 100%); padding: 2rem;">
+        <h1 style="color: var(--color-purple); font-size: 2rem; margin-bottom: 0.75rem;">Virtual Guardian Mode</h1>
+        <p style="color: var(--color-gray-dark); font-size: 0.95rem; opacity: 0.8;">Real-time journey tracking with trusted contacts</p>
+    </div>
+
+    <!-- Current Journey Status -->
+    <div class="card" style="margin-top: 2rem;">
+        <h2 style="color: var(--color-purple); margin-bottom: 1.5rem; font-size: 1.3rem;">Journey Status</h2>
+        
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+            <!-- Journey Info -->
+            <div class="card" style="background: linear-gradient(135deg, rgba(200, 220, 200, 0.2) 0%, rgba(200, 220, 200, 0.1) 100%);">
+                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+                    <div style="width: 50px; height: 50px; background: var(--color-success); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.3rem; font-weight: 700;">✓</div>
+                    <div>
+                        <div style="font-size: 1.2rem; font-weight: 700; color: var(--color-success);">Guardian Active</div>
+                        <div style="font-size: 0.8rem; color: var(--color-gray-dark); opacity: 0.7;">Monitoring your journey</div>
+                    </div>
+                </div>
+                <div style="display: grid; gap: 0.75rem; font-size: 0.9rem;">
+                    <div><span style="color: var(--color-gray-dark); opacity: 0.7;">From:</span> <strong>Central Station</strong></div>
+                    <div><span style="color: var(--color-gray-dark); opacity: 0.7;">To:</span> <strong>City Center</strong></div>
+                    <div><span style="color: var(--color-gray-dark); opacity: 0.7;">Duration:</span> <strong>45 min</strong></div>
+                    <div><span style="color: var(--color-gray-dark); opacity: 0.7;">Transport:</span> <strong>Public</strong></div>
+                </div>
+            </div>
+
+            <!-- Status Indicator -->
+            <div class="card" style="background: var(--color-pink); text-align: center; padding: 1.5rem;">
+                <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">📍</div>
+                <div style="font-weight: 700; color: var(--color-purple); margin-bottom: 0.25rem;">On Journey</div>
+                <div style="font-size: 0.8rem; color: var(--color-gray-dark); opacity: 0.8; margin-bottom: 1rem;">2 min ago</div>
+                <div style="background: rgba(255,255,255,0.6); padding: 0.4rem 0.8rem; border-radius: 12px; font-size: 0.75rem; color: var(--color-purple); font-weight: 600;">GPS OK</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Start New Journey -->
+    <div class="card" style="margin-top: 2rem;">
+        <h3 style="color: var(--color-purple); margin-bottom: 1.5rem; font-size: 1.1rem;">Start New Journey</h3>
+        
+        <form id="journeyForm">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                <div>
+                    <label class="form-label">From</label>
+                    <input type="text" class="form-control" placeholder="Starting point" required>
+                </div>
+                <div>
+                    <label class="form-label">To</label>
+                    <input type="text" class="form-control" placeholder="Destination" required>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 1rem;">
+                <label class="form-label">Share With</label>
+                <div style="display: flex; gap: 1rem;">
+                    <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; font-size: 0.9rem;">
+                        <input type="checkbox" checked="true" style="width: 16px; height: 16px; cursor: pointer;">
+                        <span>Emergency Contacts</span>
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; font-size: 0.9rem;">
+                        <input type="checkbox" style="width: 16px; height: 16px; cursor: pointer;">
+                        <span>Police</span>
+                    </label>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 1.5rem;">
+                <label class="form-label">Alert If Delayed</label>
+                <select class="form-control" required>
+                    <option>5 minutes</option>
+                    <option selected>10 minutes</option>
+                    <option>15 minutes</option>
+                    <option>20 minutes</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-success btn-lg" style="width: 100%; background: var(--color-success); color: white; border: none;">
+                Activate Guardian
+            </button>
+        </form>
+    </div>
+
+    <!-- Watching Contacts -->
+    <div class="card" style="margin-top: 2rem;">
+        <h3 style="color: var(--color-purple); margin-bottom: 1.5rem; font-size: 1.1rem;">Watching Your Journey</h3>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem;">
+            <div class="card" style="background: linear-gradient(135deg, rgba(200, 220, 200, 0.15) 0%, rgba(200, 220, 200, 0.05) 100%); text-align: center; padding: 1rem;">
+                <div style="font-size: 2rem; margin-bottom: 0.5rem;">👩</div>
+                <div style="font-weight: 700; color: var(--color-purple); font-size: 0.9rem; margin-bottom: 0.25rem;">Mom</div>
+                <div style="display: inline-block; margin-top: 0.5rem; padding: 0.2rem 0.6rem; background: var(--color-success); color: white; border-radius: 10px; font-size: 0.7rem; font-weight: 600;">Live</div>
+            </div>
+
+            <div class="card" style="background: linear-gradient(135deg, rgba(200, 220, 200, 0.15) 0%, rgba(200, 220, 200, 0.05) 100%); text-align: center; padding: 1rem;">
+                <div style="font-size: 2rem; margin-bottom: 0.5rem;">👨</div>
+                <div style="font-weight: 700; color: var(--color-purple); font-size: 0.9rem; margin-bottom: 0.25rem;">Brother</div>
+                <div style="display: inline-block; margin-top: 0.5rem; padding: 0.2rem 0.6rem; background: var(--color-success); color: white; border-radius: 10px; font-size: 0.7rem; font-weight: 600;">Live</div>
+            </div>
+
+            <div class="card" style="background: linear-gradient(135deg, rgba(200, 220, 200, 0.15) 0%, rgba(200, 220, 200, 0.05) 100%); text-align: center; padding: 1rem;">
+                <div style="font-size: 2rem; margin-bottom: 0.5rem;">👩</div>
+                <div style="font-weight: 700; color: var(--color-purple); font-size: 0.9rem; margin-bottom: 0.25rem;">Friend</div>
+                <div style="display: inline-block; margin-top: 0.5rem; padding: 0.2rem 0.6rem; background: var(--color-success); color: white; border-radius: 10px; font-size: 0.7rem; font-weight: 600;">Live</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Journeys -->
+    <div class="card" style="margin-top: 2rem; margin-bottom: 2rem;">
+        <h3 style="color: var(--color-purple); margin-bottom: 1rem; font-size: 1.1rem;">Recent Journeys</h3>
+        
+        <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
+                <thead>
+                    <tr style="border-bottom: 2px solid var(--color-gray-medium);">
+                        <th style="text-align: left; padding: 0.75rem; font-weight: 600; color: var(--color-purple);">Route</th>
+                        <th style="text-align: left; padding: 0.75rem; font-weight: 600; color: var(--color-purple);">Date</th>
+                        <th style="text-align: left; padding: 0.75rem; font-weight: 600; color: var(--color-purple);">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="border-bottom: 1px solid var(--color-gray-medium);">
+                        <td style="padding: 0.75rem;">Central → Office</td>
+                        <td style="padding: 0.75rem;">Today, 8:30 AM</td>
+                        <td style="padding: 0.75rem;"><span style="background: var(--color-success); color: white; padding: 0.2rem 0.6rem; border-radius: 8px; font-size: 0.8rem;">✓ Safe</span></td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--color-gray-medium);">
+                        <td style="padding: 0.75rem;">Office → Home</td>
+                        <td style="padding: 0.75rem;">Yesterday, 6:15 PM</td>
+                        <td style="padding: 0.75rem;"><span style="background: var(--color-success); color: white; padding: 0.2rem 0.6rem; border-radius: 8px; font-size: 0.8rem;">✓ Safe</span></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0.75rem;">Mall → Home</td>
+                        <td style="padding: 0.75rem;">2 days ago</td>
+                        <td style="padding: 0.75rem;"><span style="background: var(--color-success); color: white; padding: 0.2rem 0.6rem; border-radius: 8px; font-size: 0.8rem;">✓ Safe</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('journeyForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    alert('Virtual Guardian activated!');
+});
+</script>
+{% endblock %}\n        <p style=\"color: #495057; font-size: 1.1rem;\">Real-time journey tracking with instant alert system for trusted contacts</p>\n    </div>\n\n    <!-- Current Journey Status -->\n    <div class=\"card\" style=\"margin-top: 2rem; position: relative; overflow: hidden;\">\n        <div style=\"position: absolute; top: 0; right: 0; width: 200px; height: 200px; background: radial-gradient(circle, rgba(94, 59, 238, 0.1) 0%, transparent 70%); border-radius: 50%; transform: translate(50px, -50px);\"></div>\n        \n        <h2 style=\"color: #5E3BEE; margin-bottom: 1.5rem; position: relative; z-index: 1;\">Journey Status</h2>\n        \n        <div style=\"display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; margin-bottom: 2rem; position: relative; z-index: 1;\">\n            <!-- Journey Info -->\n            <div>\n                <div class=\"card\" style=\"background: linear-gradient(135deg, rgba(81, 207, 102, 0.1) 0%, rgba(81, 207, 102, 0.05) 100%);\">\n                    <div style=\"display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;\">\n                        <div style=\"width: 60px; height: 60px; background: linear-gradient(135deg, #51CF66 0%, #40c057 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem;\">\n                            ✓\n                        </div>\n                        <div>\n                            <div style=\"font-size: 1.5rem; font-weight: 700; color: #51CF66;\">Virtual Guardian Active</div>\n                            <div style=\"font-size: 0.875rem; color: #495057;\">Your journey is being monitored</div>\n                        </div>\n                    </div>\n                </div>\n\n                <!-- Journey Details -->\n                <div style=\"margin-top: 1.5rem;\">\n                    <div style=\"display: flex; justify-content: space-between; margin-bottom: 1rem;\">\n                        <span style=\"color: #495057; font-weight: 500;\">📍 From:</span>\n                        <span style=\"font-weight: 600;\">Central Station, Mumbai</span>\n                    </div>\n                    <div style=\"display: flex; justify-content: space-between; margin-bottom: 1rem;\">\n                        <span style=\"color: #495057; font-weight: 500;\">🎯 To:</span>\n                        <span style=\"font-weight: 600;\">Office Building, Fort</span>\n                    </div>\n                    <div style=\"display: flex; justify-content: space-between; margin-bottom: 1rem;\">\n                        <span style=\"color: #495057; font-weight: 500;\">⏱️ Duration:</span>\n                        <span style=\"font-weight: 600;\">45 minutes</span>\n                    </div>\n                    <div style=\"display: flex; justify-content: space-between; margin-bottom: 1rem;\">\n                        <span style=\"color: #495057; font-weight: 500;\">🚗 Mode:</span>\n                        <span style=\"font-weight: 600;\">Public Transport</span>\n                    </div>\n                </div>\n            </div>\n\n            <!-- Status Indicators -->\n            <div>\n                <div class=\"card\" style=\"background: #F8C8DC; text-align: center; padding: 1.5rem; border: none;\">\n                    <div style=\"font-size: 3rem; margin-bottom: 1rem; animation: pulse 1.5s ease-in-out infinite;\">📍</div>\n                    <div style=\"font-weight: 700; color: #5E3BEE; margin-bottom: 0.5rem;\">On Journey</div>\n                    <div style=\"font-size: 0.875rem; color: #495057;\">Last updated: 2 min ago</div>\n                    <div style=\"margin-top: 1rem;\">\n                        <div style=\"background: rgba(255,255,255,0.6); padding: 0.5rem 1rem; border-radius: 12px; font-size: 0.875rem; color: #5E3BEE; font-weight: 600;\">\n                            GPS Accurate\n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n\n    <!-- Start New Journey -->\n    <div class=\"card\" style=\"margin-top: 2rem;\">\n        <h3 style=\"color: #5E3BEE; margin-bottom: 1.5rem;\">🚀 Start New Journey</h3>\n        \n        <form id=\"journeyForm\">\n            <div style=\"display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;\">\n                <div>\n                    <label class=\"form-label\">From Location</label>\n                    <input type=\"text\" class=\"form-control\" placeholder=\"Enter starting point\" required>\n                </div>\n                <div>\n                    <label class=\"form-label\">To Location</label>\n                    <input type=\"text\" class=\"form-control\" placeholder=\"Enter destination\" required>\n                </div>\n            </div>\n\n            <div style=\"margin-bottom: 1.5rem;\">\n                <label class=\"form-label\">📱 Share Location With</label>\n                <div style=\"display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;\">\n                    <label style=\"display: flex; align-items: center; gap: 0.5rem; cursor: pointer;\">\n                        <input type=\"checkbox\" checked=true style=\"width: 18px; height: 18px; cursor: pointer;\">\n                        <span>Emergency Contacts</span>\n                    </label>\n                    <label style=\"display: flex; align-items: center; gap: 0.5rem; cursor: pointer;\">\n                        <input type=\"checkbox\" style=\"width: 18px; height: 18px; cursor: pointer;\">\n                        <span>Police Department</span>\n                    </label>\n                </div>\n            </div>\n\n            <div style=\"margin-bottom: 1.5rem;\">\n                <label class=\"form-label\">⏰ Alert If Delayed By</label>\n                <select class=\"form-control\" required>\n                    <option>5 minutes</option>\n                    <option selected>10 minutes</option>\n                    <option>15 minutes</option>\n                    <option>20 minutes</option>\n                </select>\n            </div>\n\n            <button type=\"submit\" class=\"btn btn-success btn-lg\" style=\"width: 100%;\">\n                ✨ Activate Virtual Guardian\n            </button>\n        </form>\n    </div>\n\n    <!-- Emergency Contacts Monitoring -->\n    <div class=\"card\" style=\"margin-top: 2rem;\">\n        <h3 style=\"color: #5E3BEE; margin-bottom: 1.5rem;\">👥 Watching You Right Now</h3>\n        \n        <div style=\"display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem;\">\n            <!-- Contact 1 -->\n            <div class=\"card\" style=\"background: linear-gradient(135deg, rgba(81, 207, 102, 0.1) 0%, rgba(81, 207, 102, 0.05) 100%);\">\n                <div style=\"text-align: center;\">\n                    <div style=\"width: 50px; height: 50px; margin: 0 auto 1rem; background: linear-gradient(135deg, #51CF66 0%, #40c057 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem;\">👩</div>\n                    <div style=\"font-weight: 700; color: #5E3BEE; margin-bottom: 0.25rem;\">Mom</div>\n                    <div style=\"font-size: 0.875rem; color: #495057; margin-bottom: 0.75rem;\">Connected</div>\n                    <div style=\"display: inline-block; margin-top: 0.5rem; padding: 0.25rem 0.75rem; background: #51CF66; color: white; border-radius: 12px; font-size: 0.75rem; font-weight: 600;\">\n                        Live\n                    </div>\n                </div>\n            </div>\n\n            <!-- Contact 2 -->\n            <div class=\"card\" style=\"background: linear-gradient(135deg, rgba(81, 207, 102, 0.1) 0%, rgba(81, 207, 102, 0.05) 100%);\">\n                <div style=\"text-align: center;\">\n                    <div style=\"width: 50px; height: 50px; margin: 0 auto 1rem; background: linear-gradient(135deg, #51CF66 0%, #40c057 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem;\">👨</div>\n                    <div style=\"font-weight: 700; color: #5E3BEE; margin-bottom: 0.25rem;\">Brother</div>\n                    <div style=\"font-size: 0.875rem; color: #495057; margin-bottom: 0.75rem;\">Connected</div>\n                    <div style=\"display: inline-block; margin-top: 0.5rem; padding: 0.25rem 0.75rem; background: #51CF66; color: white; border-radius: 12px; font-size: 0.75rem; font-weight: 600;\">\n                        Live\n                    </div>\n                </div>\n            </div>\n\n            <!-- Contact 3 -->\n            <div class=\"card\" style=\"background: linear-gradient(135deg, rgba(81, 207, 102, 0.1) 0%, rgba(81, 207, 102, 0.05) 100%);\">\n                <div style=\"text-align: center;\">\n                    <div style=\"width: 50px; height: 50px; margin: 0 auto 1rem; background: linear-gradient(135deg, #51CF66 0%, #40c057 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem;\">👩</div>\n                    <div style=\"font-weight: 700; color: #5E3BEE; margin-bottom: 0.25rem;\">Best Friend</div>\n                    <div style=\"font-size: 0.875rem; color: #495057; margin-bottom: 0.75rem;\">Connected</div>\n                    <div style=\"display: inline-block; margin-top: 0.5rem; padding: 0.25rem 0.75rem; background: #51CF66; color: white; border-radius: 12px; font-size: 0.75rem; font-weight: 600;\">\n                        Live\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n\n    <!-- Journey History -->\n    <div class=\"card\" style=\"margin-top: 2rem;\">\n        <h3 style=\"color: #5E3BEE; margin-bottom: 1.5rem;\">📊 Recent Journeys</h3>\n        \n        <div style=\"overflow-x: auto;\">\n            <table style=\"width: 100%; border-collapse: collapse;\">\n                <thead>\n                    <tr style=\"border-bottom: 2px solid #E6E6FA;\">\n                        <th style=\"text-align: left; padding: 1rem; font-weight: 600; color: #5E3BEE;\">Route</th>\n                        <th style=\"text-align: left; padding: 1rem; font-weight: 600; color: #5E3BEE;\">Date</th>\n                        <th style=\"text-align: left; padding: 1rem; font-weight: 600; color: #5E3BEE;\">Duration</th>\n                        <th style=\"text-align: left; padding: 1rem; font-weight: 600; color: #5E3BEE;\">Status</th>\n                    </tr>\n                </thead>\n                <tbody>\n                    <tr style=\"border-bottom: 1px solid #E6E6FA;\">\n                        <td style=\"padding: 1rem;\">Central Station → Office</td>\n                        <td style=\"padding: 1rem;\">Today, 8:30 AM</td>\n                        <td style=\"padding: 1rem;\">47 min</td>\n                        <td style=\"padding: 1rem;\"><span style=\"background: #51CF66; color: white; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.875rem; font-weight: 600;\">✓ Safe</span></td>\n                    </tr>\n                    <tr style=\"border-bottom: 1px solid #E6E6FA;\">\n                        <td style=\"padding: 1rem;\">Office → Home</td>\n                        <td style=\"padding: 1rem;\">Yesterday, 6:15 PM</td>\n                        <td style=\"padding: 1rem;\">52 min</td>\n                        <td style=\"padding: 1rem;\"><span style=\"background: #51CF66; color: white; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.875rem; font-weight: 600;\">✓ Safe</span></td>\n                    </tr>\n                    <tr>\n                        <td style=\"padding: 1rem;\">Mall → Home</td>\n                        <td style=\"padding: 1rem;\">2 days ago, 9:45 PM</td>\n                        <td style=\"padding: 1rem;\">38 min</td>\n                        <td style=\"padding: 1rem;\"><span style=\"background: #51CF66; color: white; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.875rem; font-weight: 600;\">✓ Safe</span></td>\n                    </tr>\n                </tbody>\n            </table>\n        </div>\n    </div>\n</div>\n\n<script>\ndocument.getElementById('journeyForm').addEventListener('submit', function(e) {\n    e.preventDefault();\n    alert('Virtual Guardian activated! Your emergency contacts are now monitoring your journey.');\n});\n</script>\n\n<style>\n@keyframes pulse {\n    0%, 100% { opacity: 1; transform: scale(1); }\n    50% { opacity: 0.7; transform: scale(1.05); }\n}\n</style>\n{% endblock %}\n

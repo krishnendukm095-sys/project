@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container" style="max-width: 900px; margin: 3rem auto 4rem;">
+    <!-- Hero Section -->
+    <div class="card" style="text-align: center; background: linear-gradient(135deg, #F5D5E8 0%, #E8DFD5 100%); padding: 2rem; margin-bottom: 2rem;">
+        <h1 style="color: var(--color-purple); font-size: 2rem; margin: 0 0 0.5rem 0;">🔒 Complaint Details</h1>
+        <p style="color: var(--color-gray-dark); font-size: 0.95rem; opacity: 0.8; margin: 0;">Encrypted complaint information (Officer view only)</p>
+    </div>
+
+    {% if complaint_data %}
+    <div class="card">
+        <!-- Complaint Data Section -->
+        <div style="padding: 2rem; border-bottom: 1px solid var(--color-gray-light);">
+            <h3 style="color: var(--color-purple); font-size: 1.15rem; margin-bottom: 1.5rem;">📋 Complaint Information</h3>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+                <div>
+                    <div style="font-size: 0.8rem; color: var(--color-gray-dark); opacity: 0.7; margin-bottom: 0.25rem;">Report UUID</div>
+                    <div style="font-family: monospace; font-weight: 600; color: var(--color-purple); word-break: break-all; font-size: 0.85rem;">{{ report_uuid }}</div>
+                </div>
+                <div>
+                    <div style="font-size: 0.8rem; color: var(--color-gray-dark); opacity: 0.7; margin-bottom: 0.25rem;">Category</div>
+                    <div style="font-weight: 600; color: var(--color-purple);">{{ complaint_data.issue_category if complaint_data.issue_category else 'N/A' }}</div>
+                </div>
+            </div>
+
+            <div>
+                <div style="font-size: 0.8rem; color: var(--color-gray-dark); opacity: 0.7; margin-bottom: 0.25rem;">Incident Description</div>
+                <div style="background: var(--color-gray-light); padding: 1rem; border-radius: var(--radius-md); color: var(--color-gray-dark); line-height: 1.6; font-size: 0.95rem; white-space: pre-wrap;">{{ complaint_data.description if complaint_data.description else 'No description' }}</div>
+            </div>
+
+            {% if complaint_data.evidence_file %}
+            <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(139, 122, 168, 0.1); border-left: 4px solid var(--color-purple); border-radius: var(--radius-md);">
+                <div style="font-size: 0.8rem; color: var(--color-gray-dark); opacity: 0.7; margin-bottom: 0.25rem;">📎 Attached Evidence</div>
+                <div style="font-weight: 600; color: var(--color-purple);">{{ complaint_data.evidence_file }}</div>
+            </div>
+            {% endif %}
+
+            <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(100, 200, 100, 0.1); border-radius: var(--radius-md);">
+                <div style="font-size: 0.85rem; color: #28A745; font-weight: 500;">
+                    ✓ Data verified and decrypted safely from encrypted storage
+                </div>
+            </div>
+        </div>
+
+        <!-- Status Update Section -->
+        <div style="padding: 2rem;">
+            <h3 style="color: var(--color-purple); font-size: 1.15rem; margin-bottom: 1.5rem;">⚙️ Update Status</h3>
+            
+            <form method="POST">
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; font-weight: 600; color: var(--color-purple); font-size: 0.9rem; margin-bottom: 0.5rem;">Complaint Status *</label>
+                    <select name="status" class="form-control" required style="padding: 0.75rem; border: 1px solid var(--color-gray-light); border-radius: var(--radius-md);">
+                        <option value="Pending">Pending</option>
+                        <option value="Assigned">Assigned</option>
+                        <option value="In Progress">In Progress</option>
+                        <option value="Resolved">Resolved</option>
+                        <option value="Closed">Closed</option>
+                    </select>
+                </div>
+
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; font-weight: 600; color: var(--color-purple); font-size: 0.9rem; margin-bottom: 0.5rem;">Officer Notes</label>
+                    <textarea name="notes" class="form-control" rows="4" placeholder="Add notes about investigation, actions taken, follow-up details, etc." style="padding: 0.75rem; border: 1px solid var(--color-gray-light); border-radius: var(--radius-md); font-family: inherit;"></textarea>
+                </div>
+
+                <!-- Security Notice -->
+                <div style="padding: 1rem; background: linear-gradient(135deg, rgba(139, 122, 168, 0.1) 0%, rgba(167, 139, 250, 0.05) 100%); border-left: 4px solid var(--color-purple); border-radius: var(--radius-md); margin-bottom: 2rem;">
+                    <h4 style="color: var(--color-purple); margin-top: 0; font-size: 0.95rem;">🔐 Security Notice</h4>
+                    <p style="margin-bottom: 0; font-size: 0.85rem; color: var(--color-gray-dark);">Your actions on this complaint are logged. The complainant's identity remains encrypted and protected. Only authorized personnel can access this information.</p>
+                </div>
+
+                <div style="display: flex; gap: 1rem;">
+                    <button type="submit" style="flex: 1; padding: 0.95rem 1.5rem; background: var(--color-purple); color: white; border: none; border-radius: var(--radius-md); font-weight: 600; cursor: pointer; font-size: 0.95rem; transition: all 0.25s ease;">
+                        Update Complaint
+                    </button>
+                    <a href="{{ url_for('police_complaints') }}" style="flex: 1; padding: 0.95rem 1.5rem; background: var(--color-gray-light); color: var(--color-purple); border: none; border-radius: var(--radius-md); font-weight: 600; text-align: center; text-decoration: none; cursor: pointer; font-size: 0.95rem; transition: all 0.25s ease;">
+                        Back to Complaints
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {% else %}
+    <div class="card" style="text-align: center; padding: 3rem 2rem; background: linear-gradient(135deg, rgba(255, 0, 0, 0.1) 0%, rgba(255, 100, 100, 0.05) 100%); border: 2px solid rgba(255, 0, 0, 0.3);">
+        <div style="font-size: 2rem; margin-bottom: 1rem;">⚠️</div>
+        <h3 style="color: #D32F2F; font-size: 1.25rem; margin-bottom: 0.5rem;">Decryption Error</h3>
+        <p style="color: var(--color-gray-dark); font-size: 0.95rem; opacity: 0.8; margin-bottom: 1.5rem;">Unable to decrypt complaint data. This may indicate a security issue or data corruption.</p>
+        <a href="{{ url_for('police_complaints') }}" style="display: inline-block; padding: 0.8rem 2rem; background: var(--color-purple); color: white; border-radius: var(--radius-md); text-decoration: none; font-weight: 600;">
+            Return to Complaints
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

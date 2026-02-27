@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% block body_class %}police-page{% endblock %}
+{% block nav_class %}bg-primary{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 1200px; margin: 3rem auto 4rem;">
+    <!-- Hero Section -->
+    <div class="card" style="text-align: center; background: linear-gradient(135deg, #F5D5E8 0%, #E8DFD5 100%); padding: 2rem; margin-bottom: 2rem;">
+        <h1 style="color: var(--color-purple); font-size: 2rem; margin: 0 0 0.5rem 0;">🚓 Police Dashboard</h1>
+        <p style="color: var(--color-gray-dark); font-size: 0.95rem; opacity: 0.8; margin: 0;">Manage incident reports and response status</p>
+    </div>
+
+    <!-- Statistics -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+        <div class="card" style="text-align: center; padding: 1.5rem; background: linear-gradient(135deg, rgba(139, 122, 168, 0.1) 0%, rgba(139, 122, 168, 0.05) 100%);">
+            <div style="font-size: 2.25rem; font-weight: 700; color: var(--color-purple); margin-bottom: 0.25rem;">{{ counts.get('Pending',0) + counts.get('Under Action',0) + counts.get('Resolved',0) }}</div>
+            <div style="font-weight: 600; font-size: 0.9rem; color: var(--color-gray-dark);">Total Reports</div>
+        </div>
+        <div class="card" style="text-align: center; padding: 1.5rem; background: linear-gradient(135deg, rgba(255, 193, 7, 0.1) 0%, rgba(255, 193, 7, 0.05) 100%);">
+            <div style="font-size: 2.25rem; font-weight: 700; color: #FFC107; margin-bottom: 0.25rem;">{{ counts.get('Pending',0) }}</div>
+            <div style="font-weight: 600; font-size: 0.9rem; color: var(--color-gray-dark);">Pending</div>
+        </div>
+        <div class="card" style="text-align: center; padding: 1.5rem; background: linear-gradient(135deg, rgba(0, 123, 255, 0.1) 0%, rgba(0, 123, 255, 0.05) 100%);">
+            <div style="font-size: 2.25rem; font-weight: 700; color: #007BFF; margin-bottom: 0.25rem;">{{ counts.get('Under Action',0) }}</div>
+            <div style="font-weight: 600; font-size: 0.9rem; color: var(--color-gray-dark);">In Action</div>
+        </div>
+        <div class="card" style="text-align: center; padding: 1.5rem; background: linear-gradient(135deg, rgba(40, 167, 69, 0.1) 0%, rgba(40, 167, 69, 0.05) 100%);">
+            <div style="font-size: 2.25rem; font-weight: 700; color: #28A745; margin-bottom: 0.25rem;">{{ counts.get('Resolved',0) }}</div>
+            <div style="font-weight: 600; font-size: 0.9rem; color: var(--color-gray-dark);">Resolved</div>
+        </div>
+    </div>
+
+    <!-- Filters & Search -->
+    <div class="card" style="margin-bottom: 2rem;">
+        <div style="padding: 1.5rem; border-bottom: 1px solid var(--color-gray-light);">
+            <h3 style="color: var(--color-purple); font-size: 1.05rem; margin: 0 0 1rem 0;">Filter Reports</h3>
+            
+            <div style="margin-bottom: 1rem;">
+                <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                    <a href="/dashboard/police" class="btn" style="background: var(--color-gray-light); color: var(--color-gray-dark); padding: 0.6rem 1.25rem; border-radius: var(--radius-md); text-decoration: none; font-weight: 500; border: none; cursor: pointer; font-size: 0.9rem;">
+                        All
+                    </a>
+                    <a href="?status=Pending" class="btn" style="background: rgba(255, 193, 7, 0.2); color: #FFC107; padding: 0.6rem 1.25rem; border-radius: var(--radius-md); text-decoration: none; font-weight: 500; border: none; cursor: pointer; font-size: 0.9rem;">
+                        Pending
+                    </a>
+                    <a href="?status=Under%20Action" class="btn" style="background: rgba(0, 123, 255, 0.2); color: #007BFF; padding: 0.6rem 1.25rem; border-radius: var(--radius-md); text-decoration: none; font-weight: 500; border: none; cursor: pointer; font-size: 0.9rem;">
+                        Under Action
+                    </a>
+                    <a href="?status=Resolved" class="btn" style="background: rgba(40, 167, 69, 0.2); color: #28A745; padding: 0.6rem 1.25rem; border-radius: var(--radius-md); text-decoration: none; font-weight: 500; border: none; cursor: pointer; font-size: 0.9rem;">
+                        Resolved
+                    </a>
+                </div>
+            </div>
+
+            <form method="get" style="display: grid; grid-template-columns: 1fr 1fr auto; gap: 1rem;">
+                <input type="text" name="q" class="form-control" placeholder="Search by ID..." value="{{ query or '' }}" style="padding: 0.7rem; border: 1px solid var(--color-gray-light); border-radius: var(--radius-md);">
+                <input type="date" name="date" class="form-control" value="{{ date_filter or '' }}" style="padding: 0.7rem; border: 1px solid var(--color-gray-light); border-radius: var(--radius-md);">
+                <button type="submit" style="padding: 0.7rem 2rem; background: var(--color-purple); color: #FAFAF8; border: none; border-radius: var(--radius-md); font-weight: 500; cursor: pointer;">🔍</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Reports List -->
+    <div style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem;">
+        {% for r in reports %}
+        <div class="card" style="overflow: hidden;">
+            <div style="background: linear-gradient(135deg, var(--color-purple) 0%, #8B7AA8 100%); color: white; padding: 1rem; display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <div style="font-weight: 700; font-size: 0.95rem;">Report #{{ r[0] }}</div>
+                    <div style="font-size: 0.8rem; opacity: 0.95;">{{ r[6] }}</div>
+                </div>
+                <div>
+                    {% if r[5]=='Pending' %}
+                        <span style="background: rgba(255, 255, 255, 0.3); padding: 0.4rem 1rem; border-radius: var(--radius-md); font-weight: 600; font-size: 0.8rem;">⏳ Pending</span>
+                    {% elif r[5]=='Under Action' %}
+                        <span style="background: rgba(255, 255, 255, 0.3); padding: 0.4rem 1rem; border-radius: var(--radius-md); font-weight: 600; font-size: 0.8rem;">⚡ In Action</span>
+                    {% elif r[5]=='Resolved' %}
+                        <span style="background: rgba(255, 255, 255, 0.3); padding: 0.4rem 1rem; border-radius: var(--radius-md); font-weight: 600; font-size: 0.8rem;">✓ Resolved</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div style="padding: 1.5rem;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+                    <div>
+                        <div style="font-size: 0.8rem; color: var(--color-gray-dark); opacity: 0.7; margin-bottom: 0.25rem;">Issue Type</div>
+                        <div style="font-weight: 600; color: var(--color-purple);">{{ r[1] }}</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 0.8rem; color: var(--color-gray-dark); opacity: 0.7; margin-bottom: 0.25rem;">Location</div>
+                        <div style="font-weight: 600; color: var(--color-purple);">{{ r[3] or 'Not specified' }}</div>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 1.5rem;">
+                    <div style="font-size: 0.8rem; color: var(--color-gray-dark); opacity: 0.7; margin-bottom: 0.25rem;">Description</div>
+                    <div style="font-weight: 500; color: var(--color-gray-dark); line-height: 1.5;">{{ r[2] or 'No description' }}</div>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 1rem; border-top: 1px solid var(--color-gray-light);">
+                    <div style="font-size: 0.8rem; color: var(--color-gray-dark); opacity: 0.7;">
+                        {{ 'Anonymous' if r[4] else 'Named Report' }}
+                    </div>
+                    <div style="display: flex; gap: 0.75rem;">
+                        {% if r[5] != 'Under Action' %}
+                        <a href="/update_report/{{ r[0] }}/Under%20Action" style="padding: 0.6rem 1.25rem; background: #007BFF; color: white; border: none; border-radius: var(--radius-md); text-decoration: none; font-weight: 500; font-size: 0.85rem; cursor: pointer;">
+                            Take Action
+                        </a>
+                        {% endif %}
+                        {% if r[5] != 'Resolved' %}
+                        <a href="/update_report/{{ r[0] }}/Resolved" style="padding: 0.6rem 1.25rem; background: #28A745; color: white; border: none; border-radius: var(--radius-md); text-decoration: none; font-weight: 500; font-size: 0.85rem; cursor: pointer;">
+                            Resolve
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

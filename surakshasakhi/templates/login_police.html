@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="max-width: 450px; margin: 4rem auto; padding: var(--spacing-md);">
+    <div class="card">
+        <div style="background: linear-gradient(135deg, #8B7AA8 0%, #7C6BA8 100%); padding: 2rem; border-radius: var(--radius-lg) var(--radius-lg) 0 0; text-align: center;">
+            <h1 style="color: #FAFAF8; font-size: 1.6rem; margin-bottom: 0.5rem;">Police Login</h1>
+            <p style="color: rgba(250, 250, 248, 0.9); font-size: 0.95rem;">Access the police dashboard</p>
+        </div>
+        
+        <div style="padding: 2rem;">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                {% for category, msg in messages %}
+                <div style="background: {% if category == 'error' %}var(--color-danger){% else %}var(--color-success){% endif %}; color: white; padding: 1rem; border-radius: var(--radius-md); margin-bottom: 1.5rem; font-size: 0.9rem;">{{ msg }}</div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+            
+            <form method="POST">
+                <div style="margin-bottom: 1.5rem;">
+                    <label class="form-label">Username</label>
+                    <input type="text" name="username" class="form-control" required>
+                </div>
+                
+                <div style="margin-bottom: 1.5rem;">
+                    <label class="form-label">Password</label>
+                    <input type="password" name="password" class="form-control" required>
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-lg" style="width: 100%; background: linear-gradient(135deg, #8B7AA8 0%, #7C6BA8 100%); color: #FAFAF8; border: none;">
+                    Log In
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

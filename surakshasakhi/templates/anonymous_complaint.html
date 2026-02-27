@@ -1,0 +1,213 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container" style="max-width: 800px; margin: 3rem auto 4rem;">
+    <!-- Hero Section -->
+    <div class="card" style="text-align: center; background: linear-gradient(135deg, #F5D5E8 0%, #E8DFD5 100%); padding: 2rem; margin-bottom: 2rem;">
+        <h1 style="color: var(--color-purple); font-size: 2rem; margin: 0 0 0.5rem 0;">🔒 Anonymous Complaint</h1>
+        <p style="color: var(--color-gray-dark); font-size: 0.95rem; opacity: 0.8; margin: 0;">Your identity is completely protected. All data is encrypted.</p>
+    </div>
+
+    {% if confirmation %}
+    <!-- Success Message -->
+    <div class="card" style="background: linear-gradient(135deg, rgba(40, 167, 69, 0.1) 0%, rgba(75, 192, 100, 0.05) 100%); border: 2px solid #28A745; padding: 1.5rem; margin-bottom: 2rem; border-radius: var(--radius-lg);">
+        <div style="color: #28A745;">
+            <h3 style="margin-top: 0;">✓ Complaint Submitted Successfully</h3>
+            <p style="white-space: pre-wrap; font-family: monospace; background: rgba(0,0,0,0.05); padding: 1rem; border-radius: var(--radius-md);">{{ confirmation }}</p>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Complaint Form -->
+    <div class="card">
+        <form method="POST" enctype="multipart/form-data" style="padding: 2rem;">
+            <!-- Location Information -->
+            <div style="margin-bottom: 2rem;">
+                <h3 style="color: var(--color-purple); font-size: 1.1rem; margin-bottom: 1.5rem;">📍 Location Details</h3>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+                    <div>
+                        <label style="display: block; font-weight: 600; color: var(--color-purple); font-size: 0.9rem; margin-bottom: 0.5rem;">District *</label>
+                        <input type="text" name="district" class="form-control" required placeholder="e.g., Mumbai Central" style="padding: 0.75rem; border: 1px solid var(--color-gray-light); border-radius: var(--radius-md);">
+                    </div>
+                    <div>
+                        <label style="display: block; font-weight: 600; color: var(--color-purple); font-size: 0.9rem; margin-bottom: 0.5rem;">City *</label>
+                        <input type="text" name="city" class="form-control" required placeholder="e.g., Mumbai" style="padding: 0.75rem; border: 1px solid var(--color-gray-light); border-radius: var(--radius-md);">
+                    </div>
+                </div>
+
+                <div>
+                    <label style="display: block; font-weight: 600; color: var(--color-purple); font-size: 0.9rem; margin-bottom: 0.5rem;">PIN Code *</label>
+                    <input type="text" name="pin_code" class="form-control" required placeholder="e.g., 400001" style="padding: 0.75rem; border: 1px solid var(--color-gray-light); border-radius: var(--radius-md);" id="pin_code">
+                </div>
+                
+                <button type="button" onclick="searchNearbyStations()" style="margin-top: 1rem; padding: 0.75rem 1.5rem; background: var(--color-purple); color: #FAFAF8; border: none; border-radius: var(--radius-md); font-weight: 600; cursor: pointer; font-size: 0.95rem;">
+                    🔍 Search Nearby Police Stations
+                </button>
+            </div>
+
+            <!-- Nearby Police Stations Will Load Here -->
+            <div id="stations_container"></div>
+            <!-- Nearby Police Stations Will Load Here -->
+            <div id="stations_container"></div>
+
+            <!-- Incident Information -->
+            <div style="margin-bottom: 2rem;">
+                <h3 style="color: var(--color-purple); font-size: 1.1rem; margin-bottom: 1.5rem;">📝 Incident Details</h3>
+                
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; font-weight: 600; color: var(--color-purple); font-size: 0.9rem; margin-bottom: 0.5rem;">Incident Category *</label>
+                    <select name="issue_category" class="form-control" required style="padding: 0.75rem; border: 1px solid var(--color-gray-light); border-radius: var(--radius-md);">
+                        <option value="">-- Select Category --</option>
+                        <option value="Harassment">Workplace Harassment</option>
+                        <option value="Assault">Physical Assault</option>
+                        <option value="Discrimination">Discrimination</option>
+                        <option value="Threat">Threats/Intimidation</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; font-weight: 600; color: var(--color-purple); font-size: 0.9rem; margin-bottom: 0.5rem;">Date of Incident *</label>
+                    <input type="date" name="incident_date" class="form-control" required style="padding: 0.75rem; border: 1px solid var(--color-gray-light); border-radius: var(--radius-md);">
+                </div>
+
+                <div>
+                    <label style="display: block; font-weight: 600; color: var(--color-purple); font-size: 0.9rem; margin-bottom: 0.5rem;">Description / Details *</label>
+                    <textarea name="description" class="form-control" rows="6" required placeholder="Please provide detailed information about the incident. Be as specific as possible about what happened, when, and who was involved." style="padding: 0.75rem; border: 1px solid var(--color-gray-light); border-radius: var(--radius-md); font-family: inherit;"></textarea>
+                </div>
+            </div>
+
+            <!-- Evidence Upload -->
+            <div style="margin-bottom: 2rem;">
+                <h3 style="color: var(--color-purple); font-size: 1.1rem; margin-bottom: 1.5rem;">📎 Evidence (Optional)</h3>
+                
+                <div style="padding: 1.5rem; background: var(--color-gray-light); border-radius: var(--radius-lg); border: 2px dashed var(--color-gray-medium); text-align: center;">
+                    <i class="bi bi-cloud-upload" style="font-size: 2rem; color: var(--color-purple); margin-bottom: 0.5rem; display: block;"></i>
+                    <label for="evidence_file" style="cursor: pointer; font-weight: 600; color: var(--color-purple);">
+                        Click to upload evidence
+                        <input type="file" id="evidence_file" name="evidence_file" style="display: none;" accept=".pdf,.jpg,.jpeg,.png,.docx,.doc">
+                    </label>
+                    <p style="font-size: 0.85rem; color: var(--color-gray-dark); opacity: 0.8; margin-top: 0.5rem;">Photos, documents, or recordings (Max 10MB)</p>
+                </div>
+            </div>
+
+            <!-- Security Notice -->
+            <div style="padding: 1.5rem; background: linear-gradient(135deg, rgba(139, 122, 168, 0.1) 0%, rgba(167, 139, 250, 0.05) 100%); border-left: 4px solid var(--color-purple); border-radius: var(--radius-md); margin-bottom: 2rem;">
+                <h4 style="color: var(--color-purple); margin-top: 0;">🔐 Your Privacy is Protected</h4>
+                <ul style="margin-bottom: 0; padding-left: 1.5rem; color: var(--color-gray-dark); font-size: 0.9rem;">
+                    <li>Your identity is never stored or revealed</li>
+                    <li>All information is encrypted and secure</li>
+                    <li>You will receive a unique Report ID for reference</li>
+                    <li>Only authorized police officers can access your complaint</li>
+                    <li>You remain completely anonymous throughout the process</li>
+                </ul>
+            </div>
+
+            <!-- Submit Button -->
+            <div style="display: flex; gap: 1rem;">
+                <button type="submit" style="flex: 1; padding: 1rem; background: var(--color-purple); color: #FAFAF8; border: none; border-radius: var(--radius-lg); font-weight: 600; cursor: pointer; font-size: 1rem; transition: all 0.25s ease;">
+                    Submit Complaint Securely
+                </button>
+                <a href="/" style="flex: 1; padding: 1rem; background: var(--color-gray-light); color: var(--color-purple); border: none; border-radius: var(--radius-lg); font-weight: 600; cursor: pointer; font-size: 1rem; transition: all 0.25s ease; text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center;">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function selectStation(stationId, stationName) {
+    // Remove previous selection styling
+    document.querySelectorAll('[id^="station_"]').forEach(el => {
+        el.style.borderColor = 'transparent';
+        el.style.backgroundColor = 'white';
+    });
+    
+    // Highlight selected station
+    const selectedElement = document.getElementById('station_' + stationId);
+    if (selectedElement) {
+        selectedElement.style.borderColor = 'var(--color-purple)';
+        selectedElement.style.backgroundColor = 'rgba(139, 122, 168, 0.05)';
+    }
+}
+
+function searchNearbyStations() {
+    const district = document.querySelector('input[name="district"]').value;
+    const city = document.querySelector('input[name="city"]').value;
+    const pinCode = document.getElementById('pin_code').value;
+    
+    const container = document.getElementById('stations_container');
+    
+    if (!district || !city) {
+        container.innerHTML = '<div style="color: red; padding: 1rem;">Please enter District and City to search nearby stations</div>';
+        return;
+    }
+    
+    // Show loading state
+    container.innerHTML = '<div style="padding: 1rem; text-align: center; color: var(--color-purple);">🔍 Searching nearby stations...</div>';
+    
+    // Fetch stations from backend
+    fetch('/api/nearby_stations', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            district: district,
+            city: city,
+            pin_code: pinCode
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.stations_data && data.stations_data.length > 0) {
+            let html = '<div style="padding: 1.5rem; background: linear-gradient(135deg, rgba(255, 193, 7, 0.1) 0%, rgba(255, 235, 59, 0.05) 100%); border-left: 4px solid #FFC107; border-radius: var(--radius-md); margin-bottom: 2rem;">';
+            html += '<h3 style="color: var(--color-purple); margin-top: 0; margin-bottom: 1rem;">🚔 Nearby Police Stations (' + data.stations_data.length + ' Found)</h3>';
+            html += '<p style="font-size: 0.9rem; color: var(--color-gray-dark); margin-bottom: 1rem;">Select a police station to notify them of the incident:</p>';
+            html += '<div style="display: grid; grid-template-columns: 1fr; gap: 1rem;">';
+            
+            data.stations_data.forEach(item => {
+                const station = item.station;
+                const officers = item.officers || [];
+                html += '<div style="border: 2px solid transparent; padding: 1rem; border-radius: var(--radius-md); background: white; cursor: pointer; transition: all 0.25s ease;" id="station_' + station[0] + '" onclick="selectStation(' + station[0] + ', \'' + station[1] + '\')">';
+                html += '<div style="display: flex; justify-content: space-between; align-items: start;">';
+                html += '<div style="flex: 1;">';
+                html += '<h4 style="color: var(--color-purple); margin: 0 0 0.5rem 0;">' + station[1] + '</h4>';
+                html += '<p style="margin: 0.25rem 0; font-size: 0.9rem; color: var(--color-gray-dark);">📍 ' + station[2] + '</p>';
+                html += '<p style="margin: 0.25rem 0; font-size: 0.9rem; color: var(--color-gray-dark);">📞 ' + station[6] + '</p>';
+                html += '<p style="margin: 0.25rem 0; font-size: 0.9rem; color: #666;">District: ' + station[3] + ' | City: ' + station[4] + '</p>';
+                
+                // Display assigned officers
+                if (officers.length > 0) {
+                    html += '<div style="margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid #eee;">';
+                    html += '<p style="margin: 0 0 0.5rem 0; font-weight: 600; color: var(--color-purple); font-size: 0.85rem;">👮 Assigned Officers:</p>';
+                    officers.forEach(officer => {
+                        html += '<p style="margin: 0.25rem 0; font-size: 0.85rem; color: #555;">• ' + officer.full_name + '</p>';
+                    });
+                    html += '</div>';
+                } else {
+                    html += '<div style="margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid #eee;">';
+                    html += '<p style="margin: 0; font-size: 0.85rem; color: #999;">No officers assigned</p>';
+                    html += '</div>';
+                }
+                
+                html += '</div>';
+                html += '<input type="radio" name="selected_station_id" value="' + station[0] + '" style="margin-top: 0.5rem;" onchange="selectStation(' + station[0] + ', \'' + station[1] + '\')">';
+                html += '</div></div>';
+            });
+            
+            html += '</div></div>';
+            container.innerHTML = html;
+        } else {
+            container.innerHTML = '<div style="padding: 1rem; background: #fff3cd; border: 1px solid #ffc107; border-radius: var(--radius-md); color: #856404;">No police stations found in this area. Please check the district and city names.</div>';
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        container.innerHTML = '<div style="padding: 1rem; background: #f8d7da; border: 1px solid #f5c6cb; border-radius: var(--radius-md); color: #721c24;">Error loading police stations. Please try again.</div>';
+    });
+}
+</script>
+{% endblock %}

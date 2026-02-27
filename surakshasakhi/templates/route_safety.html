@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container" style="max-width: 900px; margin: 3rem auto 4rem;">
+    <!-- Hero Section -->
+    <div class="card" style="text-align: center; background: linear-gradient(135deg, #F5D5E8 0%, #E8DFD5 100%); padding: 2.5rem;">
+        <h1 style="color: var(--color-purple); font-size: 2.2rem; margin-bottom: 0.75rem;">Route Safety Score</h1>
+        <p style="color: var(--color-gray-dark); font-size: 1rem; opacity: 0.8;">AI-powered analysis of your travel route with real-time safety</p>
+    </div>
+
+    <!-- Main Form Card -->
+    <div class="card" style="margin-top: 2rem;">
+        <h2 style="color: var(--color-purple); margin-bottom: 1.5rem; font-size: 1.3rem;">Plan Your Route</h2>
+        
+        <form id="routeForm" method="post">
+            <div style="margin-bottom: 1.5rem;">
+                <label class="form-label">Starting Location</label>
+                <input type="text" class="form-control" id="origin" name="origin" placeholder="Enter starting point" required>
+                <button type="button" class="btn btn-sm" onclick="getCurrentLocation('origin')" style="margin-top: 0.5rem; padding: 0.5rem 1rem; font-size: 0.875rem; background: var(--color-pink); color: var(--color-purple); border: none;">
+                    Use Current Location
+                </button>
+            </div>
+
+            <div style="margin-bottom: 1.5rem;">
+                <label class="form-label">Destination</label>
+                <input type="text" class="form-control" id="destination" name="destination" placeholder="Enter destination" required>
+            </div>
+
+            <div style="margin-bottom: 1.5rem;">
+                <label class="form-label">Travel Time</label>
+                <select class="form-control" name="travel_time" required>
+                    <option value="">Select time of travel</option>
+                    <option value="morning">Morning (6 AM - 12 PM)</option>
+                    <option value="afternoon">Afternoon (12 PM - 5 PM)</option>
+                    <option value="evening">Evening (5 PM - 9 PM)</option>
+                    <option value="night">Night (9 PM - 6 AM)</option>
+                </select>
+            </div>
+
+            <div style="margin-bottom: 1.5rem;">
+                <label class="form-label">Mode of Transport</label>
+                <select class="form-control" name="transport_mode" required>
+                    <option value="">Select transport mode</option>
+                    <option value="walking">Walking</option>
+                    <option value="cycling">Cycling</option>
+                    <option value="public_transport">Public Transport</option>
+                    <option value="private_vehicle">Private Vehicle</option>
+                    <option value="taxi">Taxi/Ride-share</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-lg" style="width: 100%; margin-top: 1.5rem;">Analyze Safety</button>
+        </form>
+    </div>
+
+    <!-- Results Section -->
+    <div id="resultsSection" style="margin-top: 2rem; display: none;">
+        <div class="card" style="text-align: center; background: linear-gradient(135deg, rgba(200, 220, 200, 0.15) 0%, rgba(232, 228, 220, 0.1) 100%); padding: 2rem;">
+            <h2 style="color: var(--color-purple); margin-bottom: 1rem; font-size: 1.4rem;">Route Safety Score</h2>
+            <div style="font-size: 3.5rem; font-weight: 700; color: var(--color-success); margin: 1.5rem 0;" id="safetyScore">85%</div>
+            <div style="font-size: 1.1rem; font-weight: 600; margin-bottom: 1.5rem;" id="safetyStatus">
+                <span style="background: var(--color-success); color: white; padding: 0.6rem 1.2rem; border-radius: 20px; display: inline-block; font-size: 0.95rem;">
+                    SAFE Route
+                </span>
+            </div>
+            <p style="color: var(--color-gray-dark); font-size: 0.95rem; opacity: 0.85;" id="safetyDescription">
+                This route has a strong safety profile with well-lit roads and active community presence.
+            </p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1.5rem;">
+            <div class="card">
+                <h4 style="color: var(--color-purple); margin-bottom: 0.75rem; font-size: 0.95rem;">Lighting</h4>
+                <div style="background: var(--color-gray-light); border-radius: 8px; padding: 0.5rem; overflow: hidden;">
+                    <div style="background: var(--color-warning); height: 16px; border-radius: 6px; width: 80%;"></div>
+                </div>
+                <p style="font-size: 0.8rem; color: var(--color-gray-dark); margin-top: 0.5rem; opacity: 0.8;">80% - Well-lit</p>
+            </div>
+
+            <div class="card">
+                <h4 style="color: var(--color-purple); margin-bottom: 0.75rem; font-size: 0.95rem;">Police Presence</h4>
+                <div style="background: var(--color-gray-light); border-radius: 8px; padding: 0.5rem; overflow: hidden;">
+                    <div style="background: var(--color-info); height: 16px; border-radius: 6px; width: 75%;"></div>
+                </div>
+                <p style="font-size: 0.8rem; color: var(--color-gray-dark); margin-top: 0.5rem; opacity: 0.8;">75% - Active</p>
+            </div>
+
+            <div class="card">
+                <h4 style="color: var(--color-purple); margin-bottom: 0.75rem; font-size: 0.95rem;">Crowd Activity</h4>
+                <div style="background: var(--color-gray-light); border-radius: 8px; padding: 0.5rem; overflow: hidden;">
+                    <div style="background: var(--color-success); height: 16px; border-radius: 6px; width: 85%;"></div>
+                </div>
+                <p style="font-size: 0.8rem; color: var(--color-gray-dark); margin-top: 0.5rem; opacity: 0.8;">85% - Good</p>
+            </div>
+
+            <div class="card">
+                <h4 style="color: var(--color-purple); margin-bottom: 0.75rem; font-size: 0.95rem;">Incidents</h4>
+                <div style="background: var(--color-gray-light); border-radius: 8px; padding: 0.5rem; overflow: hidden;">
+                    <div style="background: var(--color-success); height: 16px; border-radius: 6px; width: 90%;"></div>
+                </div>
+                <p style="font-size: 0.8rem; color: var(--color-gray-dark); margin-top: 0.5rem; opacity: 0.8;">90% - Low Rate</p>
+            </div>
+        </div>
+
+        <div class="card" style="margin-top: 1.5rem; background: linear-gradient(135deg, rgba(139, 122, 168, 0.08) 0%, rgba(245, 213, 232, 0.08) 100%);">
+            <h3 style="color: var(--color-purple); margin-bottom: 1rem; font-size: 1.1rem;">Safety Tips</h3>
+            <ul style="list-style: none; padding: 0; margin: 0;">
+                <li style="padding: 0.6rem 0; border-bottom: 1px solid rgba(139, 122, 168, 0.15); display: flex; align-items: center; gap: 0.75rem;">
+                    <span style="color: var(--color-success); font-size: 0.9rem;">✓</span>
+                    <span style="font-size: 0.9rem;">Enable Virtual Guardian for real-time tracking</span>
+                </li>
+                <li style="padding: 0.6rem 0; border-bottom: 1px solid rgba(139, 122, 168, 0.15); display: flex; align-items: center; gap: 0.75rem;">
+                    <span style="color: var(--color-success); font-size: 0.9rem;">✓</span>
+                    <span style="font-size: 0.9rem;">Travel during peak hours for safety</span>
+                </li>
+                <li style="padding: 0.6rem 0; border-bottom: 1px solid rgba(139, 122, 168, 0.15); display: flex; align-items: center; gap: 0.75rem;">
+                    <span style="color: var(--color-success); font-size: 0.9rem;">✓</span>
+                    <span style="font-size: 0.9rem;">Share location with trusted contacts</span>
+                </li>
+                <li style="padding: 0.6rem 0; display: flex; align-items: center; gap: 0.75rem;">
+                    <span style="color: var(--color-success); font-size: 0.9rem;">✓</span>
+                    <span style="font-size: 0.9rem;">Keep emergency contacts updated</span>
+                </li>
+            </ul>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem; margin-bottom: 2rem;">
+            <a href="/virtual_guardian" class="btn btn-success btn-lg" style="text-align: center; text-decoration: none; font-size: 0.95rem;">
+                Virtual Guardian
+            </a>
+            <a href="/heatmap" class="btn" style="text-align: center; text-decoration: none; background: var(--color-info); color: white; padding: 0.9rem 2rem; border-radius: var(--radius-lg); font-weight: 500; font-size: 0.95rem;">
+                View Heatmap
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+function getCurrentLocation(fieldId) {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+            document.getElementById(fieldId).value = lat + ", " + lng;
+        }, function() {
+            alert('Please enable location access');
+        });
+    }
+}
+
+document.getElementById('routeForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    document.getElementById('resultsSection').style.display = 'block';
+    document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
+});
+</script>
+{% endblock %}\n        \n        <form id=\"routeForm\" method=\"post\">\n            <!-- Origin Field -->\n            <div style=\"margin-bottom: 1.5rem;\">\n                <label class=\"form-label\">📍 Starting Location</label>\n                <input type=\"text\" class=\"form-control\" id=\"origin\" name=\"origin\" placeholder=\"Enter your starting point or press 'Use Current Location'\" required>\n                <small style=\"display: block; margin-top: 0.5rem; color: #74C0FC;\">\n                    <button type=\"button\" class=\"btn btn-sm\" onclick=\"getCurrentLocation('origin')\" style=\"margin-top: 0.5rem; padding: 0.5rem 1rem; font-size: 0.875rem;\">\n                        📱 Use Current Location\n                    </button>\n                </small>\n            </div>\n\n            <!-- Destination Field -->\n            <div style=\"margin-bottom: 1.5rem;\">\n                <label class=\"form-label\">🎯 Destination</label>\n                <input type=\"text\" class=\"form-control\" id=\"destination\" name=\"destination\" placeholder=\"Enter your destination\" required>\n            </div>\n\n            <!-- Time of Travel -->\n            <div style=\"margin-bottom: 1.5rem;\">\n                <label class=\"form-label\">⏰ Estimated Travel Time</label>\n                <select class=\"form-control\" name=\"travel_time\" required>\n                    <option value=\"\">Select time of travel</option>\n                    <option value=\"morning\">Morning (6 AM - 12 PM)</option>\n                    <option value=\"afternoon\">Afternoon (12 PM - 5 PM)</option>\n                    <option value=\"evening\">Evening (5 PM - 9 PM)</option>\n                    <option value=\"night\">Night (9 PM - 6 AM)</option>\n                </select>\n            </div>\n\n            <!-- Mode of Transport -->\n            <div style=\"margin-bottom: 1.5rem;\">\n                <label class=\"form-label\">🚗 Mode of Transport</label>\n                <select class=\"form-control\" name=\"transport_mode\" required>\n                    <option value=\"\">Select transport mode</option>\n                    <option value=\"walking\">Walking</option>\n                    <option value=\"cycling\">Cycling</option>\n                    <option value=\"public_transport\">Public Transport</option>\n                    <option value=\"private_vehicle\">Private Vehicle</option>\n                    <option value=\"taxi\">Taxi/Ride-share</option>\n                </select>\n            </div>\n\n            <!-- Submit Button -->\n            <button type=\"submit\" class=\"btn btn-primary btn-lg\" style=\"width: 100%; margin-top: 1.5rem;\">\n                ✨ Analyze Route Safety\n            </button>\n        </form>\n    </div>\n\n    <!-- Results Section -->\n    <div id=\"resultsSection\" style=\"margin-top: 3rem; display: none;\">\n        <!-- Safety Score Card -->\n        <div class=\"card\" style=\"text-align: center; background: linear-gradient(135deg, rgba(81, 207, 102, 0.1) 0%, rgba(81, 207, 102, 0.05) 100%);\">\n            <h2 style=\"color: #51CF66; margin-bottom: 1rem;\">🛡️ Route Safety Score</h2>\n            <div style=\"font-size: 4rem; font-weight: 700; color: #5E3BEE; margin: 1rem 0;\" id=\"safetyScore\">85%</div>\n            <div style=\"font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem;\" id=\"safetyStatus\">\n                <span style=\"background: linear-gradient(135deg, #51CF66 0%, #40c057 100%); color: white; padding: 0.75rem 1.5rem; border-radius: 20px; display: inline-block;\">\n                    ✓ SAFE Route\n                </span>\n            </div>\n            <p style=\"color: #495057; font-size: 1rem;\" id=\"safetyDescription\">\n                This route has a strong safety profile. Well-lit roads and active police presence.\n            </p>\n        </div>\n\n        <!-- Safety Breakdown -->\n        <div style=\"display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 2rem;\">\n            <!-- Lighting Factor -->\n            <div class=\"card\">\n                <h4 style=\"color: #5E3BEE; margin-bottom: 1rem;\">💡 Lighting Quality</h4>\n                <div style=\"background: #F1F3F5; border-radius: 12px; padding: 0.5rem; margin-bottom: 0.5rem;\">\n                    <div style=\"background: linear-gradient(90deg, #FFD43B 0%, #FFD43B 80%, #e0d400 100%); height: 20px; border-radius: 10px;\"></div>\n                </div>\n                <p style=\"font-size: 0.875rem; color: #495057; margin-top: 0.5rem;\">80% - Mostly Well-lit</p>\n            </div>\n\n            <!-- Police Presence -->\n            <div class=\"card\">\n                <h4 style=\"color: #5E3BEE; margin-bottom: 1rem;\">👮 Police Presence</h4>\n                <div style=\"background: #F1F3F5; border-radius: 12px; padding: 0.5rem; margin-bottom: 0.5rem;\">\n                    <div style=\"background: linear-gradient(90deg, #74C0FC 0%, #74C0FC 75%, #4dabf7 100%); height: 20px; border-radius: 10px;\"></div>\n                </div>\n                <p style=\"font-size: 0.875rem; color: #495057; margin-top: 0.5rem;\">75% - Active Patrols</p>\n            </div>\n\n            <!-- Crowd Factor -->\n            <div class=\"card\">\n                <h4 style=\"color: #5E3BEE; margin-bottom: 1rem;\">👥 Crowd Activity</h4>\n                <div style=\"background: #F1F3F5; border-radius: 12px; padding: 0.5rem; margin-bottom: 0.5rem;\">\n                    <div style=\"background: linear-gradient(90deg, #51CF66 0%, #51CF66 85%, #40c057 100%); height: 20px; border-radius: 10px;\"></div>\n                </div>\n                <p style=\"font-size: 0.875rem; color: #495057; margin-top: 0.5rem;\">85% - Good Traffic</p>\n            </div>\n\n            <!-- Incident History -->\n            <div class=\"card\">\n                <h4 style=\"color: #5E3BEE; margin-bottom: 1rem;\">📊 Incident History</h4>\n                <div style=\"background: #F1F3F5; border-radius: 12px; padding: 0.5rem; margin-bottom: 0.5rem;\">\n                    <div style=\"background: linear-gradient(90deg, #51CF66 0%, #51CF66 90%, #40c057 100%); height: 20px; border-radius: 10px;\"></div>\n                </div>\n                <p style=\"font-size: 0.875rem; color: #495057; margin-top: 0.5rem;\">90% - Low Incident Rate</p>\n            </div>\n        </div>\n\n        <!-- Recommendations -->\n        <div class=\"card\" style=\"margin-top: 2rem; background: linear-gradient(135deg, rgba(94, 59, 238, 0.05) 0%, rgba(248, 200, 220, 0.05) 100%);\">\n            <h3 style=\"color: #5E3BEE; margin-bottom: 1rem;\">💪 Safety Recommendations</h3>\n            <ul style=\"list-style: none; padding: 0;\">\n                <li style=\"padding: 0.75rem 0; border-bottom: 1px solid #E6E6FA; display: flex; align-items: center; gap: 1rem;\">\n                    <span style=\"color: #51CF66; font-size: 1.25rem;\">✓</span>\n                    <span>Keep someone updated on your location using Virtual Guardian Mode</span>\n                </li>\n                <li style=\"padding: 0.75rem 0; border-bottom: 1px solid #E6E6FA; display: flex; align-items: center; gap: 1rem;\">\n                    <span style=\"color: #51CF66; font-size: 1.25rem;\">✓</span>\n                    <span>Travel during peak hours (7-8 AM, 5-7 PM) for added safety</span>\n                </li>\n                <li style=\"padding: 0.75rem 0; border-bottom: 1px solid #E6E6FA; display: flex; align-items: center; gap: 1rem;\">\n                    <span style=\"color: #51CF66; font-size: 1.25rem;\">✓</span>\n                    <span>Stick to main roads highlighted in green on the heatmap</span>\n                </li>\n                <li style=\"padding: 0.75rem 0; display: flex; align-items: center; gap: 1rem;\">\n                    <span style=\"color: #51CF66; font-size: 1.25rem;\">✓</span>\n                    <span>Enable location sharing with trusted contacts before travel</span>\n                </li>\n            </ul>\n        </div>\n\n        <!-- Action Buttons -->\n        <div style=\"display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 2rem;\">\n            <a href=\"/virtual_guardian\" class=\"btn btn-success btn-lg\" style=\"text-align: center; text-decoration: none;\">\n                👁️ Activate Virtual Guardian\n            </a>\n            <a href=\"/heatmap\" class=\"btn btn-info btn-lg\" style=\"text-align: center; text-decoration: none; background: linear-gradient(135deg, #74C0FC 0%, #4dabf7 100%);\">\n                🗺️ View Heat Map\n            </a>\n        </div>\n    </div>\n</div>\n\n<script>\nfunction getCurrentLocation(fieldId) {\n    if (navigator.geolocation) {\n        navigator.geolocation.getCurrentPosition(function(position) {\n            const lat = position.coords.latitude;\n            const lng = position.coords.longitude;\n            document.getElementById(fieldId).value = lat + \", \" + lng;\n        }, function() {\n            alert('Location access denied. Please enter manually.');\n        });\n    }\n}\n\ndocument.getElementById('routeForm').addEventListener('submit', function(e) {\n    e.preventDefault();\n    const origin = document.getElementById('origin').value;\n    const destination = document.getElementById('destination').value;\n    \n    // Simulate analysis\n    document.getElementById('resultsSection').style.display = 'block';\n    \n    // Scroll to results\n    document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });\n});\n</script>\n\n<style>\n    .btn-info {\n        color: white !important;\n        text-decoration: none;\n    }\n</style>\n{% endblock %}\n

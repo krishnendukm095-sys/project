@@ -1,0 +1,193 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!-- Pinterest-Style Hero with SVG Background Illustration -->
+<section class="hero" style="position: relative; overflow: hidden;">
+    <!-- Dreamy Night Sky Background SVG -->
+    <svg 
+        width="100%" 
+        height="100%" 
+        viewBox="0 0 1600 900" 
+        preserveAspectRatio="none"
+        style="position: absolute; top: 0; left: 0; z-index: 0; opacity: 0.95;"
+    >
+        <defs>
+            <!-- Dreamy Lavender-Violet Gradient Background -->
+            <linearGradient id="skyGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" style="stop-color:#D8B8E8;stop-opacity:1" />
+                <stop offset="25%" style="stop-color:#C9A8DC;stop-opacity:1" />
+                <stop offset="50%" style="stop-color:#B89BD4;stop-opacity:1" />
+                <stop offset="75%" style="stop-color:#A888CC;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#9975C0;stop-opacity:1" />
+            </linearGradient>
+            
+            <!-- Soft Radial Glow for Street Lights -->
+            <radialGradient id="streetLight1" cx="30%" cy="50%">
+                <stop offset="0%" style="stop-color:#FFFFCC;stop-opacity:0.8" />
+                <stop offset="50%" style="stop-color:#FFEEAA;stop-opacity:0.4" />
+                <stop offset="100%" style="stop-color:#FFE088;stop-opacity:0" />
+            </radialGradient>
+            
+            <radialGradient id="streetLight2" cx="70%" cy="40%">
+                <stop offset="0%" style="stop-color:#FFFFCC;stop-opacity:0.7" />
+                <stop offset="50%" style="stop-color:#FFE5AA;stop-opacity:0.3" />
+                <stop offset="100%" style="stop-color:#FFD088;stop-opacity:0" />
+            </radialGradient>
+            
+            <!-- Glowing SOS Icon Gradient -->
+            <radialGradient id="sosGlow" cx="50%" cy="50%">
+                <stop offset="0%" style="stop-color:#FF6FA0;stop-opacity:0.9" />
+                <stop offset="50%" style="stop-color:#E8B8C6;stop-opacity:0.5" />
+                <stop offset="100%" style="stop-color:#D9A5B9;stop-opacity:0" />
+            </radialGradient>
+            
+            <!-- Safety Route Line Glow -->
+            <linearGradient id="routeGlow" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" style="stop-color:#7FD8BE;stop-opacity:0.3" />
+                <stop offset="50%" style="stop-color:#A8E6D4;stop-opacity:0.6" />
+                <stop offset="100%" style="stop-color:#7FD8BE;stop-opacity:0.3" />
+            </linearGradient>
+            
+            <!-- Blur effect for depth -->
+            <filter id="blur">
+                <feGaussianBlur in="SourceGraphic" stdDeviation="3" />
+            </filter>
+            
+            <filter id="blurSoft">
+                <feGaussianBlur in="SourceGraphic" stdDeviation="1.5" />
+            </filter>
+        </defs>
+        
+        <!-- Night Sky Background -->
+        <rect width="1600" height="900" fill="url(#skyGradient)" />
+        
+        <!-- Blurred Skyline in Background -->
+        <g filter="url(#blur)" opacity="0.3">
+            <!-- Building silhouettes -->
+            <rect x="50" y="650" width="280" height="250" fill="#5C4691" />
+            <rect x="400" y="700" width="320" height="200" fill="#6D5A9E" />
+            <rect x="850" y="680" width="250" height="220" fill="#5C4691" />
+            <rect x="1200" y="720" width="300" height="180" fill="#6D5A9E" />
+            <rect x="1550" y="700" width="200" height="200" fill="#5C4691" />
+        </g>
+        
+        <!-- Street Lights - Left Side Glow -->
+        <circle cx="250" cy="520" r="220" fill="url(#streetLight1)" />
+        
+        <!-- Street Lights - Right Side Glow -->
+        <circle cx="1350" cy="580" r="180" fill="url(#streetLight2)" />
+        
+        <!-- Safety Route Line on Road (Glowing Path) -->
+        <path 
+            d="M 150 750 Q 400 700 800 720 T 1600 750" 
+            stroke="url(#routeGlow)" 
+            stroke-width="8" 
+            fill="none"
+            filter="url(#blurSoft)"
+            opacity="0.6"
+        />
+        
+        <!-- Glowing SOS Icon in Sky (Faint, embedded) -->
+        <g opacity="0.35" filter="url(#blur)">
+            <circle cx="1450" cy="150" r="120" fill="url(#sosGlow)" />
+            <!-- SOS Text -->
+            <text x="1450" y="165" font-size="90" font-weight="bold" text-anchor="middle" fill="#FF6FA0" font-family="sans-serif">SOS</text>
+        </g>
+        
+        <!-- Peaceful Modern City Street (Minimal) -->
+        <!-- Sidewalk -->
+        <rect x="0" y="800" width="1600" height="100" fill="#D4C8D8" opacity="0.8" />
+        
+        <!-- Road Markings (Subtle) -->
+        <line x1="300" y1="820" x2="1300" y2="820" stroke="#BFA8C4" stroke-width="3" opacity="0.5" stroke-dasharray="40,20" />
+        
+        <!-- Female Silhouette - Confident, Walking Safely -->
+        <g opacity="0.85">
+            <!-- Shadow beneath feet -->
+            <ellipse cx="450" cy="820" rx="35" ry="12" fill="#000000" opacity="0.15" />
+            
+            <!-- Legs -->
+            <line x1="450" y1="720" x2="435" y2="810" stroke="#5C4691" stroke-width="16" stroke-linecap="round" />
+            <line x1="450" y1="720" x2="465" y2="810" stroke="#5C4691" stroke-width="16" stroke-linecap="round" />
+            
+            <!-- Body -->
+            <ellipse cx="450" cy="650" rx="30" ry="50" fill="#6D5A9E" />
+            
+            <!-- Arms (confident pose) -->
+            <line x1="420" y1="670" x2="380" y2="640" stroke="#6D5A9E" stroke-width="14" stroke-linecap="round" />
+            <line x1="480" y1="670" x2="520" y2="650" stroke="#6D5A9E" stroke-width="14" stroke-linecap="round" />
+            
+            <!-- Head -->
+            <circle cx="450" cy="590" r="28" fill="#8B7AA8" />
+            
+            <!-- Hair flowing (elegant) -->
+            <path d="M 435 570 Q 420 560 425 545" stroke="#7C6BA8" stroke-width="8" fill="none" stroke-linecap="round" />
+            <path d="M 465 570 Q 480 560 475 545" stroke="#7C6BA8" stroke-width="8" fill="none" stroke-linecap="round" />
+        </g>
+        
+        <!-- Floating Light Particles -->
+        <circle cx="300" cy="300" r="3" fill="#FFFFDD" opacity="0.6">
+            <animate attributeName="cy" values="300;200;300" dur="6s" repeatCount="indefinite" />
+            <animate attributeName="opacity" values="0.3;0.8;0.3" dur="6s" repeatCount="indefinite" />
+        </circle>
+        <circle cx="600" cy="250" r="2.5" fill="#FFFFDD" opacity="0.5">
+            <animate attributeName="cy" values="250;150;250" dur="8s" repeatCount="indefinite" />
+            <animate attributeName="opacity" values="0.2;0.7;0.2" dur="8s" repeatCount="indefinite" />
+        </circle>
+        <circle cx="900" cy="320" r="2" fill="#FFFFDD" opacity="0.4">
+            <animate attributeName="cy" values="320;220;320" dur="7s" repeatCount="indefinite" />
+            <animate attributeName="opacity" values="0.4;0.9;0.4" dur="7s" repeatCount="indefinite" />
+        </circle>
+        <circle cx="1200" cy="280" r="3" fill="#FFFFDD" opacity="0.55">
+            <animate attributeName="cy" values="280;180;280" dur="6.5s" repeatCount="indefinite" />
+            <animate attributeName="opacity" values="0.3;0.8;0.3" dur="6.5s" repeatCount="indefinite" />
+        </circle>
+        <circle cx="1500" cy="350" r="2" fill="#FFFFDD" opacity="0.45">
+            <animate attributeName="cy" values="350;250;350" dur="7.5s" repeatCount="indefinite" />
+            <animate attributeName="opacity" values="0.4;0.8;0.4" dur="7.5s" repeatCount="indefinite" />
+        </circle>
+        
+        <!-- Ultra Soft Vignette (Depth Effect) -->
+        <radialGradient id="vignette" cx="50%" cy="50%" r="70%">
+            <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:0" />
+            <stop offset="100%" style="stop-color:#000000;stop-opacity:0.15" />
+        </radialGradient>
+        <rect width="1600" height="900" fill="url(#vignette)" />
+    </svg>
+    
+    <!-- Hero Content (Clear Negative Space on Left) -->
+    <div class="hero-content" style="position: relative; z-index: 10; text-align: left; padding-left: var(--spacing-2xl);">
+        <h1 style="font-size: 3.2rem; margin-bottom: var(--spacing-md); font-weight: 700;">
+            SurakshaSakhi<br/>
+            Instant Safety<br/>
+            Report System
+        </h1>
+        <p style="font-size: 1.1rem; max-width: 500px; margin-bottom: var(--spacing-lg); opacity: 0.85;">
+            Empowering women with instant safety reports, real-time assistance, and peace of mind whenever you need it.
+        </p>
+        <div class="hero-buttons" style="justify-content: flex-start;">
+            <a href="/bus_sos" class="btn btn-primary btn-lg">
+                <i class="bi bi-exclamation-circle"></i> Activate SOS
+            </a>
+            <a href="/instant_report" class="btn btn-secondary btn-lg">
+                <i class="bi bi-flag"></i> Report Now
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Call-to-Action Section -->
+<section style="background: linear-gradient(135deg, #E8DFD5 0%, #F5D5E8 100%); padding: var(--spacing-2xl) var(--spacing-md); text-align: center; margin-top: var(--spacing-2xl); border-radius: var(--radius-lg);">
+    <div class="container">
+        <h2 style="font-size: 2rem; margin-bottom: var(--spacing-md);">Start Your Safety Journey Today</h2>
+        <p style="font-size: 1.05rem; opacity: 0.85; margin-bottom: var(--spacing-lg); max-width: 700px; margin-left: auto; margin-right: auto;">
+            Join thousands of women who trust SurakshaSakhi for their daily safety. Get instant support when you need it most.
+        </p>
+        <a href="/login" class="btn btn-primary btn-lg">
+            <i class="bi bi-box-arrow-in-right"></i> Get Started
+        </a>
+    </div>
+</section>
+
+{% endblock %}

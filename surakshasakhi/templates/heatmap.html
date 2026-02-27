@@ -1,0 +1,186 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container" style="max-width: 1200px; margin: 3rem auto 4rem;">
+    <!-- Hero Section -->
+    <div class="card" style="text-align: center; background: linear-gradient(135deg, #F5D5E8 0%, #E8DFD5 100%); padding: 2rem;">
+        <h1 style="color: var(--color-purple); font-size: 2rem; margin-bottom: 0.75rem;">Safety Heatmap</h1>
+        <p style="color: var(--color-gray-dark); font-size: 0.95rem; opacity: 0.8;">Real-time zone analysis and incident tracking</p>
+    </div>
+
+    <!-- Filters & Controls -->
+    <div class="card" style="margin-top: 2rem;">
+        <h3 style="color: var(--color-purple); margin-bottom: 1.5rem; font-size: 1.1rem;">Filter Map Data</h3>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+            <div>
+                <label class="form-label">Area</label>
+                <select class="form-control">
+                    <option>Greater Mumbai</option>
+                    <option>Central Mumbai</option>
+                    <option>North Mumbai</option>
+                    <option>South Mumbai</option>
+                </select>
+            </div>
+            <div>
+                <label class="form-label">Time Period</label>
+                <select class="form-control">
+                    <option>Last 7 Days</option>
+                    <option>Last 30 Days</option>
+                    <option>Last 90 Days</option>
+                </select>
+            </div>
+            <div>
+                <label class="form-label">Time of Day</label>
+                <select class="form-control">
+                    <option>All Times</option>
+                    <option>Morning (6 AM-12 PM)</option>
+                    <option>Evening (5-9 PM)</option>
+                    <option>Night (9 PM-6 AM)</option>
+                </select>
+            </div>
+            <div>
+                <label class="form-label">Incident Type</label>
+                <select class="form-control">
+                    <option>All Types</option>
+                    <option>Harassment</option>
+                    <option>Theft</option>
+                    <option>Assault</option>
+                </select>
+            </div>
+        </div>
+
+        <button class="btn btn-primary btn-lg" style="width: 100%; background: var(--color-purple); color: #FAFAF8; border: none;">
+            Update Heatmap
+        </button>
+    </div>
+
+    <!-- Heat Map Visualization -->
+    <div class="card" style="margin-top: 2rem;">
+        <h3 style="color: var(--color-purple); margin-bottom: 1.5rem; font-size: 1.1rem;">Zone Heatmap</h3>
+        
+        <div id="heatmapCanvas" style="position: relative; width: 100%; min-height: 400px; background: linear-gradient(135deg, var(--color-gray-light) 0%, #F0EBE5 100%); border-radius: var(--radius-lg); overflow: hidden; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; box-shadow: var(--shadow-sm);">
+            <!-- Map Placeholder -->
+            <div style="text-align: center; color: var(--color-gray-dark);">
+                <div style="font-size: 2.5rem; margin-bottom: 0.75rem;">🗺️</div>
+                <div style="font-weight: 600; margin-bottom: 0.5rem;">Interactive Safety Map</div>
+                <div style="font-size: 0.85rem; opacity: 0.7; margin-bottom: 1.5rem;">Red = High Risk | Yellow = Moderate | Green = Safe</div>
+                
+                <!-- Zone Preview -->
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; max-width: 550px; margin: 0 auto;">
+                    <div style="background: var(--color-danger); padding: 1.25rem; border-radius: var(--radius-md); color: white;">
+                        <div style="font-size: 1.2rem; margin-bottom: 0.5rem;">⚠️</div>
+                        <div style="font-weight: 600; font-size: 0.9rem;">High Risk</div>
+                        <div style="font-size: 0.8rem; opacity: 0.9;">5 reports</div>
+                    </div>
+                    <div style="background: var(--color-warning); padding: 1.25rem; border-radius: var(--radius-md); color: white;">
+                        <div style="font-size: 1.2rem; margin-bottom: 0.5rem;">⚡</div>
+                        <div style="font-weight: 600; font-size: 0.9rem;">Moderate</div>
+                        <div style="font-size: 0.8rem; opacity: 0.9;">3 reports</div>
+                    </div>
+                    <div style="background: var(--color-success); padding: 1.25rem; border-radius: var(--radius-md); color: white;">
+                        <div style="font-size: 1.2rem; margin-bottom: 0.5rem;">✓</div>
+                        <div style="font-weight: 600; font-size: 0.9rem;">Safe Zone</div>
+                        <div style="font-size: 0.8rem; opacity: 0.9;">0 reports</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Zone Details -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1.5rem;">
+        <!-- High Risk -->
+        <div class="card">
+            <h3 style="color: var(--color-danger); margin-bottom: 1rem; font-size: 1rem;">⚠️ High Risk Areas</h3>
+            <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                <div style="background: rgba(232, 184, 198, 0.2); padding: 0.75rem; border-radius: var(--radius-md); border-left: 3px solid var(--color-danger);">
+                    <div style="font-weight: 600; color: var(--color-danger); font-size: 0.9rem; margin-bottom: 0.25rem;">Red Light Area</div>
+                    <div style="font-size: 0.8rem; opacity: 0.8;">5 incidents, avoid 9 PM-6 AM</div>
+                </div>
+                <div style="background: rgba(232, 184, 198, 0.2); padding: 0.75rem; border-radius: var(--radius-md); border-left: 3px solid var(--color-danger);">
+                    <div style="font-weight: 600; color: var(--color-danger); font-size: 0.9rem; margin-bottom: 0.25rem;">Isolated Park Road</div>
+                    <div style="font-size: 0.8rem; opacity: 0.8;">3 incidents, travel with company</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Safe Zones -->
+        <div class="card">
+            <h3 style="color: var(--color-success); margin-bottom: 1rem; font-size: 1rem;">✓ Safe Zones</h3>
+            <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                <div style="background: rgba(200, 220, 200, 0.2); padding: 0.75rem; border-radius: var(--radius-md); border-left: 3px solid var(--color-success);">
+                    <div style="font-weight: 600; color: var(--color-success); font-size: 0.9rem; margin-bottom: 0.25rem;">Business District</div>
+                    <div style="font-size: 0.8rem; opacity: 0.8;">0 incidents, safe 24/7</div>
+                </div>
+                <div style="background: rgba(200, 220, 200, 0.2); padding: 0.75rem; border-radius: var(--radius-md); border-left: 3px solid var(--color-success);">
+                    <div style="font-weight: 600; color: var(--color-success); font-size: 0.9rem; margin-bottom: 0.25rem;">Commercial Hub</div>
+                    <div style="font-size: 0.8rem; opacity: 0.8;">0 incidents, 24-hour traffic</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics -->
+    <div class="card" style="margin-top: 1.5rem;">
+        <h3 style="color: var(--color-purple); margin-bottom: 1.5rem; font-size: 1.1rem;">Statistics (Last 30 Days)</h3>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+            <div style="text-align: center; padding: 1rem; background: linear-gradient(135deg, rgba(232, 184, 198, 0.15) 0%, rgba(232, 184, 198, 0.05) 100%); border-radius: var(--radius-md);">
+                <div style="font-size: 2rem; font-weight: 700; color: var(--color-danger); margin-bottom: 0.25rem;">12</div>
+                <div style="font-weight: 600; font-size: 0.9rem;">Total Incidents</div>
+            </div>
+            <div style="text-align: center; padding: 1rem; background: linear-gradient(135deg, rgba(244, 228, 166, 0.15) 0%, rgba(244, 228, 166, 0.05) 100%); border-radius: var(--radius-md);">
+                <div style="font-size: 2rem; font-weight: 700; color: var(--color-warning); margin-bottom: 0.25rem;">5</div>
+                <div style="font-weight: 600; font-size: 0.9rem;">Harassment</div>
+            </div>
+            <div style="text-align: center; padding: 1rem; background: linear-gradient(135deg, rgba(212, 232, 240, 0.15) 0%, rgba(212, 232, 240, 0.05) 100%); border-radius: var(--radius-md);">
+                <div style="font-size: 2rem; font-weight: 700; color: var(--color-info); margin-bottom: 0.25rem;">3</div>
+                <div style="font-weight: 600; font-size: 0.9rem;">Theft</div>
+            </div>
+            <div style="text-align: center; padding: 1rem; background: linear-gradient(135deg, rgba(200, 220, 200, 0.15) 0%, rgba(200, 220, 200, 0.05) 100%); border-radius: var(--radius-md);">
+                <div style="font-size: 2rem; font-weight: 700; color: var(--color-success); margin-bottom: 0.25rem;">92%</div>
+                <div style="font-weight: 600; font-size: 0.9rem;">Safe Rate</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Time Analysis -->
+    <div class="card" style="margin-top: 1.5rem; margin-bottom: 2rem;">
+        <h3 style="color: var(--color-purple); margin-bottom: 1.5rem; font-size: 1.1rem;">Safety by Time of Day</h3>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 1rem;">
+            <div style="padding: 1rem; background: var(--color-success); border-radius: var(--radius-md); text-align: center; color: white;">
+                <div style="font-size: 1.3rem; margin-bottom: 0.5rem;">🌅</div>
+                <div style="font-size: 0.85rem; font-weight: 500;">Morning</div>
+                <div style="font-size: 1.5rem; font-weight: 700; margin-top: 0.25rem;">95%</div>
+            </div>
+            <div style="padding: 1rem; background: var(--color-success); border-radius: var(--radius-md); text-align: center; color: white;">
+                <div style="font-size: 1.3rem; margin-bottom: 0.5rem;">☀️</div>
+                <div style="font-size: 0.85rem; font-weight: 500;">Afternoon</div>
+                <div style="font-size: 1.5rem; font-weight: 700; margin-top: 0.25rem;">92%</div>
+            </div>
+            <div style="padding: 1rem; background: var(--color-warning); border-radius: var(--radius-md); text-align: center; color: white;">
+                <div style="font-size: 1.3rem; margin-bottom: 0.5rem;">🌆</div>
+                <div style="font-size: 0.85rem; font-weight: 500;">Evening</div>
+                <div style="font-size: 1.5rem; font-weight: 700; margin-top: 0.25rem;">78%</div>
+            </div>
+            <div style="padding: 1rem; background: var(--color-danger); border-radius: var(--radius-md); text-align: center; color: white;">
+                <div style="font-size: 1.3rem; margin-bottom: 0.5rem;">🌙</div>
+                <div style="font-size: 0.85rem; font-weight: 500;">Night</div>
+                <div style="font-size: 1.5rem; font-weight: 700; margin-top: 0.25rem;">42%</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="card" style="text-align: center;">
+        <button class="btn btn-primary btn-lg" style="margin-right: 1rem; background: var(--color-purple); color: #FAFAF8; border: none;">
+            Download Report
+        </button>
+        <button class="btn" style="background: var(--color-pink); color: var(--color-purple); border: none; padding: 0.9rem 2rem; border-radius: var(--radius-lg); font-weight: 500; cursor: pointer;">
+            Subscribe Updates
+        </button>
+    </div>
+</div>
+{% endblock %}\n        <p style=\"color: #495057; font-size: 1.1rem;\">Real-time risk intelligence and zone safety analysis</p>\n    </div>\n\n    <!-- Filters & Controls -->\n    <div class=\"card\" style=\"margin-top: 2rem;\">\n        <h3 style=\"color: #5E3BEE; margin-bottom: 1.5rem;\">🔍 Filter & Analyze</h3>\n        \n        <div style=\"display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;\">\n            <div>\n                <label class=\"form-label\">📍 Area</label>\n                <select class=\"form-control\" style=\"font-size: 0.875rem;\">\n                    <option>Greater Mumbai</option>\n                    <option>Central Mumbai</option>\n                    <option>North Mumbai</option>\n                    <option>South Mumbai</option>\n                </select>\n            </div>\n            <div>\n                <label class=\"form-label\">📅 Time Period</label>\n                <select class=\"form-control\" style=\"font-size: 0.875rem;\">\n                    <option>Last 7 Days</option>\n                    <option>Last 30 Days</option>\n                    <option>Last 90 Days</option>\n                    <option>Last Year</option>\n                </select>\n            </div>\n            <div>\n                <label class=\"form-label\">🕐 Time of Day</label>\n                <select class=\"form-control\" style=\"font-size: 0.875rem;\">\n                    <option>All Times</option>\n                    <option>Morning (6-12 PM)</option>\n                    <option>Afternoon (12-5 PM)</option>\n                    <option>Evening (5-9 PM)</option>\n                    <option>Night (9 PM-6 AM)</option>\n                </select>\n            </div>\n            <div>\n                <label class=\"form-label\">🎯 Incident Type</label>\n                <select class=\"form-control\" style=\"font-size: 0.875rem;\">\n                    <option>All Types</option>\n                    <option>Harassment</option>\n                    <option>Theft</option>\n                    <option>Assault</option>\n                    <option>Traffic Violation</option>\n                </select>\n            </div>\n        </div>\n\n        <button class=\"btn btn-primary\" style=\"width: 100%; margin-bottom: 1rem;\">\n            🔄 Update Heat Map\n        </button>\n    </div>\n\n    <!-- Heat Map Visualization -->\n    <div class=\"card\" style=\"margin-top: 2rem;\">\n        <h3 style=\"color: #5E3BEE; margin-bottom: 1.5rem;\">Heat Map Zones</h3>\n        \n        <!-- Map Canvas -->\n        <div id=\"heatmapCanvas\" style=\"\n            position: relative;\n            width: 100%;\n            height: 500px;\n            background: linear-gradient(135deg, #F1F3F5 0%, #E9ECEF 100%);\n            border-radius: 16px;\n            overflow: hidden;\n            display: flex;\n            align-items: center;\n            justify-content: center;\n            margin-bottom: 1.5rem;\n            box-shadow: inset 0 2px 8px rgba(0,0,0,0.08);\n        \">\n            <!-- Placeholder Content -->\n            <div style=\"text-align: center; color: #495057;\">\n                <div style=\"font-size: 3rem; margin-bottom: 1rem;\">🗺️</div>\n                <div style=\"font-size: 1.25rem; font-weight: 600; margin-bottom: 0.5rem;\">Interactive Map Loading</div>\n                <div style=\"font-size: 0.875rem; color: #868e96;\">Red zones = High risk | Yellow = Moderate | Green = Safe</div>\n                \n                <!-- Simple Zone Visualization -->\n                <div style=\"display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 2rem; max-width: 600px; margin-left: auto; margin-right: auto;\">\n                    <!-- Red Zone -->\n                    <div style=\"\n                        background: linear-gradient(135deg, #FF6B6B 0%, #ff5252 100%);\n                        padding: 1.5rem;\n                        border-radius: 12px;\n                        color: white;\n                        box-shadow: 0 8px 16px rgba(255,107,107,0.3);\n                    \">\n                        <div style=\"font-size: 1.5rem; margin-bottom: 0.5rem;\">⚠️</div>\n                        <div style=\"font-weight: 600;\">High Risk</div>\n                        <div style=\"font-size: 0.875rem; opacity: 0.9; margin-top: 0.5rem;\">5 incidents</div>\n                    </div>\n\n                    <!-- Yellow Zone -->\n                    <div style=\"\n                        background: linear-gradient(135deg, #FFD43B 0%, #FFAD00 100%);\n                        padding: 1.5rem;\n                        border-radius: 12px;\n                        color: #495057;\n                        box-shadow: 0 8px 16px rgba(255,173,0,0.3);\n                    \">\n                        <div style=\"font-size: 1.5rem; margin-bottom: 0.5rem;\">⚡</div>\n                        <div style=\"font-weight: 600;\">Moderate Risk</div>\n                        <div style=\"font-size: 0.875rem; opacity: 0.9; margin-top: 0.5rem;\">3 incidents</div>\n                    </div>\n\n                    <!-- Green Zone -->\n                    <div style=\"\n                        background: linear-gradient(135deg, #51CF66 0%, #40c057 100%);\n                        padding: 1.5rem;\n                        border-radius: 12px;\n                        color: white;\n                        box-shadow: 0 8px 16px rgba(81,207,102,0.3);\n                    \">\n                        <div style=\"font-size: 1.5rem; margin-bottom: 0.5rem;\">✓</div>\n                        <div style=\"font-weight: 600;\">Safe Zone</div>\n                        <div style=\"font-size: 0.875rem; opacity: 0.9; margin-top: 0.5rem;\">0 incidents</div>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n\n    <!-- Zone Details -->\n    <div style=\"display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 2rem;\">\n        <!-- High Risk Zones -->\n        <div class=\"card\">\n            <h3 style=\"color: #FF6B6B; margin-bottom: 1.5rem;\">\n                <span style=\"font-size: 1.5rem; margin-right: 0.5rem;\">⚠️</span>High Risk Zones\n            </h3>\n            <div style=\"display: flex; flex-direction: column; gap: 1rem;\">\n                <div style=\"background: rgba(255,107,107,0.1); padding: 1rem; border-radius: 12px; border-left: 4px solid #FF6B6B;\">\n                    <div style=\"font-weight: 600; color: #FF6B6B; margin-bottom: 0.25rem;\">🔴 Red Light Area - Late Night</div>\n                    <div style=\"font-size: 0.875rem; color: #495057;\">5 incidents in last 30 days</div>\n                    <div style=\"font-size: 0.75rem; color: #868e96; margin-top: 0.5rem;\">Avoid 9 PM - 6 AM</div>\n                </div>\n                <div style=\"background: rgba(255,107,107,0.1); padding: 1rem; border-radius: 12px; border-left: 4px solid #FF6B6B;\">\n                    <div style=\"font-weight: 600; color: #FF6B6B; margin-bottom: 0.25rem;\">🔴 Isolated Park Road</div>\n                    <div style=\"font-size: 0.875rem; color: #495057;\">3 incidents in last 30 days</div>\n                    <div style=\"font-size: 0.75rem; color: #868e96; margin-top: 0.5rem;\">Low crowd area, travel with company</div>\n                </div>\n            </div>\n        </div>\n\n        <!-- Safe Zones -->\n        <div class=\"card\">\n            <h3 style=\"color: #51CF66; margin-bottom: 1.5rem;\">\n                <span style=\"font-size: 1.5rem; margin-right: 0.5rem;\">✓</span>Safe Zones\n            </h3>\n            <div style=\"display: flex; flex-direction: column; gap: 1rem;\">\n                <div style=\"background: rgba(81,207,102,0.1); padding: 1rem; border-radius: 12px; border-left: 4px solid #51CF66;\">\n                    <div style=\"font-weight: 600; color: #51CF66; margin-bottom: 0.25rem;\">🟢 Main Business District</div>\n                    <div style=\"font-size: 0.875rem; color: #495057;\">0 incidents, high police presence</div>\n                    <div style=\"font-size: 0.75rem; color: #868e96; margin-top: 0.5rem;\">Safe 24/7, well-lit streets</div>\n                </div>\n                <div style=\"background: rgba(81,207,102,0.1); padding: 1rem; border-radius: 12px; border-left: 4px solid #51CF66;\">\n                    <div style=\"font-weight: 600; color: #51CF66; margin-bottom: 0.25rem;\">🟢 Commercial Hub</div>\n                    <div style=\"font-size: 0.875rem; color: #495057;\">0 incidents, 24-hour traffic</div>\n                    <div style=\"font-size: 0.75rem; color: #868e96; margin-top: 0.5rem;\">Safe due to constant activity</div>\n                </div>\n            </div>\n        </div>\n    </div>\n\n    <!-- Incident Statistics -->\n    <div class=\"card\" style=\"margin-top: 2rem;\">\n        <h3 style=\"color: #5E3BEE; margin-bottom: 1.5rem;\">📊 Incident Statistics (Last 30 Days)</h3>\n        \n        <div style=\"display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;\">\n            <div class=\"card\" style=\"text-align: center; background: linear-gradient(135deg, rgba(255,107,107,0.1) 0%, rgba(255,107,107,0.05) 100%);\">\n                <div style=\"font-size: 2.5rem; font-weight: 700; color: #FF6B6B; margin-bottom: 0.5rem;\">12</div>\n                <div style=\"font-weight: 600; color: #495057; margin-bottom: 0.25rem;\">Total Incidents</div>\n                <div style=\"font-size: 0.875rem; color: #868e96;\">Across all zones</div>\n            </div>\n\n            <div class=\"card\" style=\"text-align: center; background: linear-gradient(135deg, rgba(255,173,0,0.1) 0%, rgba(255,173,0,0.05) 100%);\">\n                <div style=\"font-size: 2.5rem; font-weight: 700; color: #FFAD00; margin-bottom: 0.5rem;\">5</div>\n                <div style=\"font-weight: 600; color: #495057; margin-bottom: 0.25rem;\">Harassment Cases</div>\n                <div style=\"font-size: 0.875rem; color: #868e96;\">Most common type</div>\n            </div>\n\n            <div class=\"card\" style=\"text-align: center; background: linear-gradient(135deg, rgba(116,192,252,0.1) 0%, rgba(116,192,252,0.05) 100%);\">\n                <div style=\"font-size: 2.5rem; font-weight: 700; color: #74C0FC; margin-bottom: 0.5rem;\">3</div>\n                <div style=\"font-weight: 600; color: #495057; margin-bottom: 0.25rem;\">Theft Cases</div>\n                <div style=\"font-size: 0.875rem; color: #868e96;\">Mostly in crowds</div>\n            </div>\n\n            <div class=\"card\" style=\"text-align: center; background: linear-gradient(135deg, rgba(81,207,102,0.1) 0%, rgba(81,207,102,0.05) 100%);\">\n                <div style=\"font-size: 2.5rem; font-weight: 700; color: #51CF66; margin-bottom: 0.5rem;\">92%</div>\n                <div style=\"font-weight: 600; color: #495057; margin-bottom: 0.25rem;\">Safe Travel Rate</div>\n                <div style=\"font-size: 0.875rem; color: #868e96;\">In safe zones</div>\n            </div>\n        </div>\n    </div>\n\n    <!-- Time-based Risk Analysis -->\n    <div class=\"card\" style=\"margin-top: 2rem;\">\n        <h3 style=\"color: #5E3BEE; margin-bottom: 1.5rem;\">⏰ Time-Based Risk Analysis</h3>\n        \n        <div style=\"display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 1.5rem;\">\n            <div style=\"padding: 1.5rem; background: #E8F5E9; border-radius: 12px; text-align: center;\">\n                <div style=\"font-size: 1.5rem; margin-bottom: 0.5rem;\">🌅</div>\n                <div style=\"font-weight: 600; color: #51CF66; margin-bottom: 0.5rem;\">Morning</div>\n                <div style=\"font-size: 2rem; font-weight: 700; color: #51CF66; margin-bottom: 0.25rem;\">95%</div>\n                <div style=\"font-size: 0.875rem; color: #495057;\">Safe Rating</div>\n            </div>\n\n            <div style=\"padding: 1.5rem; background: #FFF9C4; border-radius: 12px; text-align: center;\">\n                <div style=\"font-size: 1.5rem; margin-bottom: 0.5rem;\">☀️</div>\n                <div style=\"font-weight: 600; color: #F59F00; margin-bottom: 0.5rem;\">Afternoon</div>\n                <div style=\"font-size: 2rem; font-weight: 700; color: #F59F00; margin-bottom: 0.25rem;\">92%</div>\n                <div style=\"font-size: 0.875rem; color: #495057;\">Safe Rating</div>\n            </div>\n\n            <div style=\"padding: 1.5rem; background: #FCE4EC; border-radius: 12px; text-align: center;\">\n                <div style=\"font-size: 1.5rem; margin-bottom: 0.5rem;\">🌆</div>\n                <div style=\"font-weight: 600; color: #F06292; margin-bottom: 0.5rem;\">Evening</div>\n                <div style=\"font-size: 2rem; font-weight: 700; color: #F06292; margin-bottom: 0.25rem;\">78%</div>\n                <div style=\"font-size: 0.875rem; color: #495057;\">Moderate Risk</div>\n            </div>\n\n            <div style=\"padding: 1.5rem; background: #FFEBEE; border-radius: 12px; text-align: center;\">\n                <div style=\"font-size: 1.5rem; margin-bottom: 0.5rem;\">🌙</div>\n                <div style=\"font-weight: 600; color: #FF6B6B; margin-bottom: 0.5rem;\">Night</div>\n                <div style=\"font-size: 2rem; font-weight: 700; color: #FF6B6B; margin-bottom: 0.25rem;\">42%</div>\n                <div style=\"font-size: 0.875rem; color: #495057;\">High Risk</div>\n            </div>\n        </div>\n    </div>\n\n    <!-- Download Report -->\n    <div class=\"card\" style=\"margin-top: 2rem; text-align: center;\">\n        <button class=\"btn btn-primary btn-lg\" style=\"margin-right: 1rem;\">\n            📥 Download Report\n        </button>\n        <button class=\"btn btn-secondary btn-lg\">\n            🔔 Subscribe to Updates\n        </button>\n    </div>\n</div>\n{% endblock %}\n

@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="max-width: 700px; margin: 3rem auto; padding: var(--spacing-md);">
+    <div class="card">
+        <div style="background: linear-gradient(135deg, #E8B8C6 0%, #E09DB0 100%); padding: 2rem; border-radius: var(--radius-lg) var(--radius-lg) 0 0; text-align: center;">
+            <h1 style="color: #FAFAF8; font-size: 1.8rem; margin-bottom: 0.5rem;">Bus Emergency SOS</h1>
+            <p style="color: rgba(250, 250, 248, 0.9); font-size: 0.95rem;">Report emergency situations on public transport</p>
+        </div>
+        
+        <div style="padding: 2rem;">
+            <form method="POST">
+                <div style="margin-bottom: 1.5rem;">
+                    <label class="form-label">Bus Number</label>
+                    <input type="text" name="bus" class="form-control" placeholder="e.g. 24B" required>
+                </div>
+                
+                <div style="margin-bottom: 1.5rem;">
+                    <label class="form-label">Current Location</label>
+                    <input type="text" name="location" class="form-control" placeholder="Enter your location" required>
+                </div>
+                
+                <div style="margin-bottom: 1.5rem;">
+                    <label class="form-label">Describe the Issue</label>
+                    <textarea name="issue" class="form-control" rows="4" placeholder="Provide details..." required></textarea>
+                </div>
+                
+                <button type="submit" class="btn btn-danger btn-lg" style="width: 100%; background: var(--color-danger); color: #FAFAF8; border: none; margin-bottom: 1.5rem;">
+                    <i class="bi bi-exclamation-circle"></i> Trigger SOS
+                </button>
+            </form>
+
+            {% if police_whatsapp_link %}
+            <div style="border-top: 1px solid var(--color-gray-medium); padding-top: var(--spacing-lg);">
+                <h3 style="font-size: 1.1rem; color: var(--color-purple); margin-bottom: 1rem;">Emergency Actions</h3>
+                <div style="display: grid; gap: 0.75rem;">
+                    <a href="tel:100" class="btn" style="background: var(--color-info); color: white; padding: 0.8rem; border-radius: var(--radius-md); text-decoration: none; text-align: center; font-weight: 500;">
+                        <i class="bi bi-telephone"></i> Call Police - 100
+                    </a>
+                    <a href="{{ police_whatsapp_link }}" target="_blank" class="btn" style="background: var(--color-success); color: white; padding: 0.8rem; border-radius: var(--radius-md); text-decoration: none; text-align: center; font-weight: 500;">
+                        <i class="bi bi-chat-dots"></i> Send WhatsApp Alert
+                    </a>
+                </div>
+                
+                <div style="margin-top: var(--spacing-lg); padding: var(--spacing-md); background: var(--color-gray-light); border-radius: var(--radius-md);">
+                    <p style="font-size: 0.85rem; color: var(--color-gray-dark); margin-bottom: 0.75rem; font-weight: 500;">Show This to Conductor:</p>
+                    <textarea class="form-control" rows="5" readonly style="font-size: 0.8rem;">{{ conductor_message }}</textarea>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

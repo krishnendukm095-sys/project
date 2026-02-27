@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="max-width: 500px; margin: 3rem auto; padding: var(--spacing-md);">
+    <div class="card">
+        <div style="background: linear-gradient(135deg, #E8B8C6 0%, #F5D5E8 100%); padding: 2rem; border-radius: var(--radius-lg) var(--radius-lg) 0 0; text-align: center;">
+            <h1 style="color: #FAFAF8; font-size: 1.6rem; margin-bottom: 0.5rem;">Submit Safety Report</h1>
+            <p style="color: rgba(250, 250, 248, 0.9); font-size: 0.95rem;">Send an incident report to authorities</p>
+        </div>
+        
+        <div style="padding: 2rem;">
+            {% if confirmation %}
+            <div style="background: var(--color-success); color: white; padding: 1rem; border-radius: var(--radius-md); margin-bottom: 1.5rem; font-size: 0.95rem;">
+                <i class="bi bi-check-circle"></i> {{ confirmation }}
+            </div>
+            {% endif %}
+            
+            <form method="POST" id="reportForm">
+                <div style="margin-bottom: 1.5rem;">
+                    <label class="form-label">Issue Type</label>
+                    <select name="issue_type" class="form-control" required>
+                        <option value="" disabled selected>Select an issue type</option>
+                        <option>Harassment</option>
+                        <option>Health Emergency</option>
+                        <option>Theft</option>
+                        <option>Other Safety Concern</option>
+                    </select>
+                </div>
+                
+                <div style="margin-bottom: 1.5rem;">
+                    <label class="form-label">Description (Optional)</label>
+                    <textarea name="description" class="form-control" rows="3" placeholder="Provide details..."></textarea>
+                </div>
+                
+                <input type="hidden" name="location" id="locationField">
+                
+                <div style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem;">
+                    <input type="checkbox" name="anonymous" id="anonCheck" style="width: 18px; height: 18px; cursor: pointer;">
+                    <label for="anonCheck" style="cursor: pointer; margin: 0; font-size: 0.95rem; color: var(--color-gray-dark);">
+                        Submit anonymously
+                    </label>
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-lg" style="width: 100%; background: linear-gradient(135deg, #8B7AA8 0%, #7C6BA8 100%); color: #FAFAF8; border: none;">
+                    Submit Report
+                </button>
+            </form>
+            
+            <p style="text-align: center; font-size: 0.8rem; color: var(--color-gray-dark); opacity: 0.7; margin-top: 1rem;">
+                Your location is automatically captured for emergency response
+            </p>
+        </div>
+    </div>
+</div>
+
+<script>
+if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function(pos){
+        document.getElementById('locationField').value = pos.coords.latitude + "," + pos.coords.longitude;
+    }, function(err){
+        document.getElementById('locationField').value = 'Unavailable';
+    });
+} else {
+    document.getElementById('locationField').value = 'Unavailable';
+}
+</script>
+{% endblock %}
