@@ -21,6 +21,7 @@
     <!-- Complaint Form -->
     <div class="card">
         <form method="POST" enctype="multipart/form-data" style="padding: 2rem;">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <!-- Location Information -->
             <div style="margin-bottom: 2rem;">
                 <h3 style="color: var(--color-purple); font-size: 1.1rem; margin-bottom: 1.5rem;">📍 Location Details</h3>
@@ -36,9 +37,15 @@
                     </div>
                 </div>
 
-                <div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                    <div>
+                        <label style="display: block; font-weight: 600; color: var(--color-purple); font-size: 0.9rem; margin-bottom: 0.5rem;">Locality *</label>
+                        <input type="text" name="locality" class="form-control" required placeholder="e.g., Chengannur" style="padding: 0.75rem; border: 1px solid var(--color-gray-light); border-radius: var(--radius-md);">
+                    </div>
+                    <div>
                     <label style="display: block; font-weight: 600; color: var(--color-purple); font-size: 0.9rem; margin-bottom: 0.5rem;">PIN Code *</label>
                     <input type="text" name="pin_code" class="form-control" required placeholder="e.g., 400001" style="padding: 0.75rem; border: 1px solid var(--color-gray-light); border-radius: var(--radius-md);" id="pin_code">
+                    </div>
                 </div>
                 
                 <button type="button" onclick="searchNearbyStations()" style="margin-top: 1rem; padding: 0.75rem 1.5rem; background: var(--color-purple); color: #FAFAF8; border: none; border-radius: var(--radius-md); font-weight: 600; cursor: pointer; font-size: 0.95rem;">
@@ -47,8 +54,7 @@
             </div>
 
             <!-- Nearby Police Stations Will Load Here -->
-            <div id="stations_container"></div>
-            <!-- Nearby Police Stations Will Load Here -->
+            <input type="hidden" name="selected_station_id" id="selected_station_id" value="">
             <div id="stations_container"></div>
 
             <!-- Incident Information -->
@@ -131,6 +137,12 @@ function selectStation(stationId, stationName) {
         selectedElement.style.borderColor = 'var(--color-purple)';
         selectedElement.style.backgroundColor = 'rgba(139, 122, 168, 0.05)';
     }
+
+    // set hidden field value so it will be submitted
+    const hidden = document.getElementById('selected_station_id');
+    if (hidden) {
+        hidden.value = stationId;
+    }
 }
 
 function searchNearbyStations() {
@@ -177,6 +189,7 @@ function searchNearbyStations() {
                 html += '<h4 style="color: var(--color-purple); margin: 0 0 0.5rem 0;">' + station[1] + '</h4>';
                 html += '<p style="margin: 0.25rem 0; font-size: 0.9rem; color: var(--color-gray-dark);">📍 ' + station[2] + '</p>';
                 html += '<p style="margin: 0.25rem 0; font-size: 0.9rem; color: var(--color-gray-dark);">📞 ' + station[6] + '</p>';
+                html += '<p style="margin: 0.25rem 0; font-size: 0.9rem; color: var(--color-gray-dark);">✉️ ' + station[7] + '</p>';
                 html += '<p style="margin: 0.25rem 0; font-size: 0.9rem; color: #666;">District: ' + station[3] + ' | City: ' + station[4] + '</p>';
                 
                 // Display assigned officers
@@ -194,7 +207,7 @@ function searchNearbyStations() {
                 }
                 
                 html += '</div>';
-                html += '<input type="radio" name="selected_station_id" value="' + station[0] + '" style="margin-top: 0.5rem;" onchange="selectStation(' + station[0] + ', \'' + station[1] + '\')">';
+                html += '<div style="margin-top: 0.75rem; text-align: right;"><button type="button" onclick="selectStation(' + station[0] + ', \'" + station[1] + "\');" style="padding: 0.5rem 0.9rem; background: var(--color-purple); color: #FAFAF8; border: none; border-radius: var(--radius-md); font-size: 0.85rem; cursor: pointer;">Select & Report</button></div>';}
                 html += '</div></div>';
             });
             

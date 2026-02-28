@@ -1,0 +1,191 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+        <div>
+            <h3 class="mb-1">Police Dashboard</h3>
+            <div class="text-muted small">
+                {{ officer[1] }} ({{ officer[3] }}) | {{ officer[7] }} | {{ officer[4] }}, {{ officer[5] }} - {{ officer[6] }}
+            </div>
+        </div>
+        <div class="d-flex flex-wrap gap-2">
+            <span class="badge text-bg-danger" id="newComplaintBadge">{{ unread_count }} New Complaints</span>
+            <a href="{{ url_for('export_complaints_csv') }}{% if filter_query %}?{{ filter_query }}{% endif %}" class="btn btn-outline-primary btn-sm">Export CSV</a>
+            <a href="{{ url_for('police_profile') }}" class="btn btn-outline-secondary btn-sm">Update My Location</a>
+            {% if is_admin_user %}
+            <a href="{{ url_for('create_officer') }}" class="btn btn-primary btn-sm">Create Officer</a>
+            <a href="{{ url_for('admin_dashboard') }}" class="btn btn-dark btn-sm">Admin Dashboard</a>
+            <a href="{{ url_for('analytics_dashboard') }}" class="btn btn-secondary btn-sm">Analytics</a>
+            {% endif %}
+            <a href="{{ url_for('logout') }}" class="btn btn-outline-danger btn-sm">Logout</a>
+        </div>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, msg in messages %}
+            <div class="alert {% if category == 'success' %}alert-success{% elif category in ['info', 'warning'] %}alert-warning{% else %}alert-danger{% endif %}">{{ msg }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div class="card shadow-sm mb-3">
+        <div class="card-body">
+            <form method="GET" class="row g-2">
+                <div class="col-md-3">
+                    <input type="text" name="q" value="{{ query or '' }}" class="form-control" placeholder="Search report or text">
+                </div>
+                <div class="col-md-2">
+                    <select name="district" class="form-select" multiple size="3">
+                        {% for d in district_options %}
+                        <option value="{{ d }}" {% if d in selected_districts %}selected{% endif %}>{{ d }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select name="city" class="form-select" multiple size="3">
+                        {% for c in city_options %}
+                        <option value="{{ c }}" {% if c in selected_cities %}selected{% endif %}>{{ c }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select name="pin_code" class="form-select" multiple size="3">
+                        {% for p in pin_options %}
+                        <option value="{{ p }}" {% if p in selected_pins %}selected{% endif %}>{{ p }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select name="status" class="form-select" multiple size="3">
+                        {% for st in ['pending', 'assigned', 'resolved'] %}
+                        <option value="{{ st }}" {% if st in selected_statuses %}selected{% endif %}>{{ st|title }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <input type="date" name="from_date" value="{{ from_date or '' }}" class="form-control">
+                </div>
+                <div class="col-md-2">
+                    <input type="date" name="to_date" value="{{ to_date or '' }}" class="form-control">
+                </div>
+                <div class="col-md-3 d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">Apply</button>
+                    <a href="{{ url_for('dashboard_police') }}" class="btn btn-outline-secondary">Reset</a>
+                </div>
+            </form>
+            <form method="POST" action="{{ url_for('read_all_notifications') }}" class="mt-2">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="btn btn-outline-dark btn-sm">Mark Notifications Read</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-3">
+        <div class="card-header"><strong>Auto-Generated Mapping Reports</strong></div>
+        <div class="card-body">
+            {% if generated_reports %}
+                <ul class="list-group list-group-flush">
+                    {% for r in generated_reports %}
+                    <li class="list-group-item d-flex justify-content-between align-items-start">
+                        <div>
+                            <div>{{ r[1] }}</div>
+                            <small class="text-muted">{{ r[2] }}</small>
+                        </div>
+                        <span class="badge text-bg-secondary">{{ r[3] }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <div class="text-muted">No mapped reports yet.</div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <strong>Complaints ({{ total_count }})</strong>
+            <span class="small text-muted">Page {{ page }} / {{ total_pages }}</span>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped table-hover mb-0 align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th class="text-nowrap">ID</th>
+                        <th class="text-nowrap">Report ID</th>
+                        <th class="text-nowrap">Location</th>
+                        <th class="text-nowrap">Locality</th>
+                        <th class="text-nowrap">Issue</th>
+                        <th class="text-nowrap">Complaint</th>
+                        <th class="text-nowrap">Created At</th>
+                        <th class="text-nowrap">Status</th>
+                        <th class="text-nowrap">Assigned Officer</th>
+                        <th class="text-nowrap">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in complaints %}
+                    <tr>
+                        <td>{{ c[0] }}</td>
+                        <td class="text-nowrap">{{ c[1][:8] }}...</td>
+                        <td>{{ c[2] }}, {{ c[3] }} - {{ c[4] }}</td>
+                        <td>{{ c[5] }}</td>
+                        <td>{{ c[6] }}</td>
+                        <td style="min-width: 260px; white-space: normal;">{{ c[7] }}</td>
+                        <td class="text-nowrap">{{ c[8] }}</td>
+                        <td><span class="badge {% if c[9]=='resolved' %}text-bg-success{% elif c[9]=='assigned' %}text-bg-warning{% else %}text-bg-secondary{% endif %}">{{ c[9]|title }}</span></td>
+                        <td class="text-nowrap">{{ c[11] or '-' }}</td>
+                        <td style="min-width: 280px;">
+                            <form method="POST" action="{{ url_for('assign_complaint', complaint_id=c[0]) }}" class="d-flex gap-1 mb-2">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <select name="officer_id" class="form-select form-select-sm">
+                                    <option value="">Assign to Officer</option>
+                                    {% for o in assignment_options.get(c[0], []) %}
+                                    <option value="{{ o[0] }}">{{ o[1] }} ({{ o[2] }})</option>
+                                    {% endfor %}
+                                </select>
+                                <button class="btn btn-sm btn-primary" type="submit">Assign</button>
+                            </form>
+                            <form method="POST" action="{{ url_for('resolve_complaint', complaint_id=c[0]) }}">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <button class="btn btn-sm btn-success" type="submit">Mark Resolved</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="10" class="text-center py-4">No complaints found.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="card-body">
+            <nav>
+                <ul class="pagination mb-0">
+                    {% set prev_page = page - 1 %}
+                    {% set next_page = page + 1 %}
+                    <li class="page-item {% if page <= 1 %}disabled{% endif %}">
+                        <a class="page-link" href="{{ url_for('dashboard_police') }}?{% if filter_query %}{{ filter_query }}&{% endif %}page={{ prev_page }}">Previous</a>
+                    </li>
+                    <li class="page-item disabled"><span class="page-link">{{ page }}</span></li>
+                    <li class="page-item {% if page >= total_pages %}disabled{% endif %}">
+                        <a class="page-link" href="{{ url_for('dashboard_police') }}?{% if filter_query %}{{ filter_query }}&{% endif %}page={{ next_page }}">Next</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<script>
+setInterval(function () {
+    fetch("{{ url_for('api_complaint_count') }}")
+        .then(res => res.json())
+        .then(data => {
+            const badge = document.getElementById('newComplaintBadge');
+            if (badge) badge.textContent = `${data.new} New Complaints`;
+        })
+        .catch(() => {});
+}, 15000);
+</script>
+{% endblock %}

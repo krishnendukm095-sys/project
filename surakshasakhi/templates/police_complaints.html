@@ -1,71 +1,64 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container" style="max-width: 1000px; margin: 3rem auto 4rem;">
-    <!-- Hero Section -->
+<div class="container" style="max-width: 1100px; margin: 3rem auto 4rem;">
     <div class="card" style="text-align: center; background: linear-gradient(135deg, #F5D5E8 0%, #E8DFD5 100%); padding: 2rem; margin-bottom: 2rem;">
-        <h1 style="color: var(--color-purple); font-size: 2rem; margin: 0 0 0.5rem 0;">📋 Anonymous Complaints</h1>
+        <h1 style="color: var(--color-purple); font-size: 2rem; margin: 0 0 0.5rem 0;">Anonymous Complaints</h1>
         <p style="color: var(--color-gray-dark); font-size: 0.95rem; opacity: 0.8; margin: 0;">Manage encrypted complaints assigned to you</p>
     </div>
 
     {% if complaints %}
-    <!-- Complaints List -->
-    <div style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem;">
-        {% for complaint in complaints %}
-        <div class="card" style="overflow: hidden;">
-            <div style="background: linear-gradient(135deg, var(--color-purple) 0%, #8B7AA8 100%); color: white; padding: 1.25rem; display: flex; justify-content: space-between; align-items: center;">
-                <div>
-                    <div style="font-weight: 700; font-size: 0.95rem;">Report ID: {{ complaint[1][:8] }}...</div>
-                    <div style="font-size: 0.85rem; opacity: 0.95;">{{ complaint[6] }}</div>
-                </div>
-                <div>
-                    {% if complaint[7] == 'Pending' %}
-                        <span style="background: rgba(255, 255, 255, 0.3); padding: 0.4rem 1rem; border-radius: var(--radius-md); font-weight: 600; font-size: 0.8rem;">⏳ Pending</span>
-                    {% elif complaint[7] == 'Assigned' %}
-                        <span style="background: rgba(255, 255, 255, 0.3); padding: 0.4rem 1rem; border-radius: var(--radius-md); font-weight: 600; font-size: 0.8rem;">📥 Assigned</span>
-                    {% elif complaint[7] == 'In Progress' %}
-                        <span style="background: rgba(255, 255, 255, 0.3); padding: 0.4rem 1rem; border-radius: var(--radius-md); font-weight: 600; font-size: 0.8rem;">⚡ In Progress</span>
-                    {% elif complaint[7] == 'Resolved' %}
-                        <span style="background: rgba(255, 255, 255, 0.3); padding: 0.4rem 1rem; border-radius: var(--radius-md); font-weight: 600; font-size: 0.8rem;">✓ Resolved</span>
-                    {% endif %}
-                </div>
-            </div>
-
-            <div style="padding: 1.5rem;">
-                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 1.5rem;">
-                    <div>
-                        <div style="font-size: 0.8rem; color: var(--color-gray-dark); opacity: 0.7; margin-bottom: 0.25rem;">District</div>
-                        <div style="font-weight: 600; color: var(--color-purple);">{{ complaint[2] }}</div>
-                    </div>
-                    <div>
-                        <div style="font-size: 0.8rem; color: var(--color-gray-dark); opacity: 0.7; margin-bottom: 0.25rem;">City</div>
-                        <div style="font-weight: 600; color: var(--color-purple);">{{ complaint[3] }}</div>
-                    </div>
-                    <div>
-                        <div style="font-size: 0.8rem; color: var(--color-gray-dark); opacity: 0.7; margin-bottom: 0.25rem;">PIN Code</div>
-                        <div style="font-weight: 600; color: var(--color-purple);">{{ complaint[4] }}</div>
-                    </div>
-                </div>
-
-                <div style="margin-bottom: 1.5rem;">
-                    <div style="font-size: 0.8rem; color: var(--color-gray-dark); opacity: 0.7; margin-bottom: 0.25rem;">Incident Date</div>
-                    <div style="font-weight: 600; color: var(--color-purple);">{{ complaint[5] }}</div>
-                </div>
-
-                <div style="display: flex; gap: 1rem;">
-                    <a href="{{ url_for('view_complaint_details', complaint_uuid=complaint[1]) }}" style="flex: 1; padding: 0.8rem 1.5rem; background: var(--color-purple); color: white; border: none; border-radius: var(--radius-md); text-decoration: none; font-weight: 600; text-align: center; cursor: pointer; transition: all 0.25s ease;">
-                        View Details & Update
-                    </a>
-                </div>
-            </div>
+    <div class="card shadow-sm">
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped table-hover mb-0 align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Report ID</th>
+                        <th>District</th>
+                        <th>City</th>
+                        <th>PIN Code</th>
+                        <th>Incident Date</th>
+                        <th>Submitted At</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for complaint in complaints %}
+                    <tr>
+                        <td>{{ complaint[1][:8] }}...</td>
+                        <td>{{ complaint[2] }}</td>
+                        <td>{{ complaint[3] }}</td>
+                        <td>{{ complaint[4] }}</td>
+                        <td>{{ complaint[5] }}</td>
+                        <td>{{ complaint[6] }}</td>
+                        <td>
+                            {% if complaint[7] == 'Pending' %}
+                                <span class="badge text-bg-secondary">Pending</span>
+                            {% elif complaint[7] == 'Assigned' %}
+                                <span class="badge text-bg-warning">Assigned</span>
+                            {% elif complaint[7] == 'In Progress' %}
+                                <span class="badge text-bg-primary">In Progress</span>
+                            {% elif complaint[7] == 'Resolved' %}
+                                <span class="badge text-bg-success">Resolved</span>
+                            {% else %}
+                                <span class="badge text-bg-secondary">{{ complaint[7] }}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{{ url_for('view_complaint_details', complaint_uuid=complaint[1]) }}" class="btn btn-sm btn-primary">
+                                View & Update
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
-        {% endfor %}
     </div>
-
     {% else %}
-    <!-- Empty State -->
     <div class="card" style="text-align: center; padding: 3rem 2rem;">
-        <div style="font-size: 3rem; margin-bottom: 1rem;">📋</div>
+        <div style="font-size: 3rem; margin-bottom: 1rem;">No complaints</div>
         <h3 style="color: var(--color-purple); font-size: 1.25rem; margin-bottom: 0.5rem;">No Complaints Assigned</h3>
         <p style="color: var(--color-gray-dark); font-size: 0.95rem; opacity: 0.8;">You currently have no anonymous complaints assigned to you.</p>
     </div>

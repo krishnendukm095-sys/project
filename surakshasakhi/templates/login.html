@@ -1,28 +1,35 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div style="max-width: 600px; margin: 4rem auto; text-align: center; padding: var(--spacing-lg);">
-    <div class="card" style="padding: var(--spacing-2xl);">
-        <h1 style="font-size: 2.2rem; margin-bottom: var(--spacing-md); color: var(--color-purple);">
-            <i class="bi bi-shield-heart"></i> SurakshaSakhi
-        </h1>
-        <p style="color: var(--color-gray-dark); margin-bottom: var(--spacing-lg); opacity: 0.8;">
-            Choose your login role to access the safety platform
-        </p>
-        
-        <div style="display: flex; justify-content: center;">
-            <div style="max-width: 300px;">
-                <p style="font-size: 0.9rem; color: var(--color-gray-medium); margin-bottom: var(--spacing-md); font-weight: 500;">Police Officer</p>
-                <a href="/login/police" class="btn btn-primary btn-lg" style="width: 100%;">
-                    <i class="bi bi-shield"></i> Police Login
-                </a>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-sm border-0" style="border-radius: 16px;">
+                <div class="card-body p-4 p-md-5 text-center">
+                    <h1 class="fw-bold mb-2" style="font-size: 2rem; color: #2f2a44;">
+                        <i class="bi bi-shield-heart me-1"></i> SurakshaSakhi
+                    </h1>
+                    <p class="text-secondary mb-4" style="font-size: 1rem;">
+                        Choose your login role to access the safety platform.
+                    </p>
+
+                    <div class="mx-auto" style="max-width: 340px;">
+                        <p class="fw-semibold mb-3" style="color: #5a5f73;">Police Officer</p>
+                        <a href="/login/police" class="btn btn-primary btn-lg w-100">
+                            <i class="bi bi-shield me-1"></i> Police Login
+                        </a>
+                        <a href="/police_register" class="btn btn-outline-secondary btn-lg w-100 mt-2">
+                            <i class="bi bi-person-plus me-1"></i> Police Registration
+                        </a>
+                    </div>
+
+                    <hr class="my-4">
+                    <p class="mb-0" style="color: #6b7280; font-size: 0.95rem; line-height: 1.5;">
+                        <i class="bi bi-info-circle me-1"></i>
+                        For individual safety reporting, use the SOS and Report features in the main menu.
+                    </p>
+                </div>
             </div>
-        </div>
-        
-        <div style="margin-top: var(--spacing-2xl); padding-top: var(--spacing-lg); border-top: 1px solid var(--color-gray-medium);">
-            <p style="color: var(--color-gray-dark); opacity: 0.7; font-size: 0.9rem;">
-                <i class="bi bi-info-circle"></i> For individual safety reporting, use the SOS and Report features in the main menu
-            </p>
         </div>
     </div>
 </div>

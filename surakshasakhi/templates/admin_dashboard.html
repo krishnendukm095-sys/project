@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="mb-0">Admin Dashboard</h3>
+        <div class="d-flex gap-2">
+            <a href="{{ url_for('create_officer') }}" class="btn btn-primary btn-sm">Create Officer</a>
+            <a href="{{ url_for('analytics_dashboard') }}" class="btn btn-secondary btn-sm">Analytics</a>
+            <a href="{{ url_for('dashboard_police') }}" class="btn btn-outline-dark btn-sm">Back to Police Dashboard</a>
+        </div>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, msg in messages %}
+            <div class="alert {% if category == 'success' %}alert-success{% else %}alert-danger{% endif %}">{{ msg }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div class="row g-3 mb-3">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header">Complaints by District</div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        {% for row in complaints_by_district %}
+                        <li class="list-group-item d-flex justify-content-between"><span>{{ row[0] or 'Unknown' }}</span><strong>{{ row[1] }}</strong></li>
+                        {% else %}
+                        <li class="list-group-item">No data</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header">Complaints by Officer</div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        {% for row in complaints_by_officer %}
+                        <li class="list-group-item d-flex justify-content-between"><span>{{ row[0] }}</span><strong>{{ row[1] }}</strong></li>
+                        {% else %}
+                        <li class="list-group-item">No data</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-3">
+        <div class="card-header">Officer Management</div>
+        <div class="card-body">
+            {% for officer in officers %}
+            <div class="border rounded p-2 mb-2">
+                <form method="POST" action="{{ url_for('edit_officer', officer_id=officer[0]) }}" class="row g-2 align-items-center">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <div class="col-md-1 small">#{{ officer[0] }}</div>
+                    <div class="col-md-2 small text-muted">{{ officer[2] }}</div>
+                    <div class="col-md-2"><input class="form-control form-control-sm" name="full_name" value="{{ officer[1] }}"></div>
+                    <div class="col-md-2"><input class="form-control form-control-sm" name="rank" value="{{ officer[3] }}"></div>
+                    <div class="col-md-2"><input class="form-control form-control-sm" name="district" value="{{ officer[4] }}"></div>
+                    <div class="col-md-1"><input class="form-control form-control-sm" name="city" value="{{ officer[5] }}"></div>
+                    <div class="col-md-1"><input class="form-control form-control-sm" name="pin_code" value="{{ officer[6] }}"></div>
+                    <div class="col-md-1"><input class="form-control form-control-sm" name="locality" value="{{ officer[7] }}"></div>
+                    <div class="col-md-1">
+                        <button class="btn btn-sm btn-primary" type="submit">Save</button>
+                    </div>
+                </form>
+                <form method="POST" action="{{ url_for('delete_officer_admin', officer_id=officer[0]) }}" onsubmit="return confirm('Delete this officer?');" class="mt-2">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button class="btn btn-sm btn-danger" type="submit">Delete</button>
+                </form>
+            </div>
+            {% else %}
+            <div class="text-muted">No officers found.</div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-header">Recent Complaints</div>
+        <div class="table-responsive">
+            <table class="table table-sm table-striped mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>ID</th>
+                        <th>Report ID</th>
+                        <th>Location</th>
+                        <th>Locality</th>
+                        <th>Issue</th>
+                        <th>Status</th>
+                        <th>Assigned Officer</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in complaints %}
+                    <tr>
+                        <td>{{ c[0] }}</td>
+                        <td>{{ c[1] }}</td>
+                        <td>{{ c[2] }}, {{ c[3] }} - {{ c[4] }}</td>
+                        <td>{{ c[5] }}</td>
+                        <td>{{ c[6] }}</td>
+                        <td>{{ c[9]|title }}</td>
+                        <td>{{ c[10] or 'Unassigned' }}</td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="7" class="text-center py-3">No complaints found.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

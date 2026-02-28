@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="mb-0">Analytics Dashboard</h3>
+        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-dark btn-sm">Back to Admin Dashboard</a>
+    </div>
+
+    <div class="row g-3">
+        <div class="col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-header">Complaints by District</div>
+                <div class="card-body"><canvas id="districtChart"></canvas></div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-header">Complaints by Status</div>
+                <div class="card-body"><canvas id="statusChart"></canvas></div>
+            </div>
+        </div>
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header">Complaint Trend (30 Days)</div>
+                <div class="card-body"><canvas id="trendChart"></canvas></div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card shadow-sm">
+                <div class="card-header">Top 5 Busy PIN Codes</div>
+                <ul class="list-group list-group-flush">
+                    {% for pin in top_pin_codes %}
+                    <li class="list-group-item d-flex justify-content-between"><span>{{ pin[0] }}</span><strong>{{ pin[1] }}</strong></li>
+                    {% else %}
+                    <li class="list-group-item">No data</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mt-3">
+        <div class="card-header">Officer Performance</div>
+        <div class="table-responsive">
+            <table class="table table-sm table-striped mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Officer</th>
+                        <th>Assigned Complaints</th>
+                        <th>Resolved Complaints</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in officer_performance %}
+                    <tr>
+                        <td>{{ row[0] }}</td>
+                        <td>{{ row[1] or 0 }}</td>
+                        <td>{{ row[2] or 0 }}</td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="3" class="text-center py-3">No performance data.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const districtStats = {{ district_stats|tojson }};
+const statusStats = {{ status_stats|tojson }};
+const trendStats = {{ trend_stats|tojson }};
+
+new Chart(document.getElementById('districtChart'), {
+    type: 'bar',
+    data: {
+        labels: districtStats.map(x => x[0] || 'Unknown'),
+        datasets: [{ label: 'Complaints', data: districtStats.map(x => x[1]), backgroundColor: '#0d6efd' }]
+    }
+});
+
+new Chart(document.getElementById('statusChart'), {
+    type: 'doughnut',
+    data: {
+        labels: statusStats.map(x => (x[0] || 'pending').toUpperCase()),
+        datasets: [{ data: statusStats.map(x => x[1]), backgroundColor: ['#6c757d', '#ffc107', '#198754'] }]
+    }
+});
+
+new Chart(document.getElementById('trendChart'), {
+    type: 'line',
+    data: {
+        labels: trendStats.map(x => x[0]),
+        datasets: [{ label: 'Complaints', data: trendStats.map(x => x[1]), borderColor: '#212529', fill: false }]
+    }
+});
+</script>
+{% endblock %}
